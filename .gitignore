@@ -3,3 +3,6 @@
 
 # builds created by go
 main
+
+#config files
+*.ini

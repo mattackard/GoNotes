@@ -4,6 +4,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"gopkg.in/ini.v1"
 )
 
 func main() {
@@ -32,5 +34,14 @@ func createFile(fileName, text string) {
 }
 
 func config() {
-	fmt.Println("config called")
+	//go.ini
+	cfg, err := ini.Load("my.ini")
+	if err != nil {
+		switch err.(type) {
+		case *os.PathError:
+			println("Found a path error!")
+		}
+	} else {
+		fmt.Println("App Mode:", cfg.Section("").Key("app_mode").String())
+	}
 }
