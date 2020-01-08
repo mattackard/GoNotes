@@ -14,6 +14,8 @@ func main() {
 	switch cmd {
 	case "create":
 		createFile(os.Args[2], os.Args[3])
+	case "config":
+		config()
 	default:
 		fmt.Printf("%s is not recognized as a command \n", os.Args[1])
 	}
@@ -27,4 +29,8 @@ func createFile(fileName, text string) {
 
 	//writes a string to the file using the reference created with Create()
 	f.WriteString(text)
+}
+
+func config() {
+	fmt.Println("config called")
 }
