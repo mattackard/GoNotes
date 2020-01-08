@@ -3,45 +3,68 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 
 	"gopkg.in/ini.v1"
 )
 
+var cfg *ini.File
+
+func init() {
+	//attempt to load the config file
+	config, err := ini.Load("config.ini")
+	cfg = config
+
+	//config error handling
+	if err != nil {
+		switch err.(type) {
+
+		//if config.ini can't be found, create it
+		case *os.PathError:
+			println("Found a path error! Creating your .ini file.")
+			os.Create("config.ini")
+
+		default:
+			log.Fatal(err)
+		}
+	}
+}
+
 func main() {
-	//Retrieves the file name passed in as the first argument
+	//Retrieves the cli cmd passed
 	var cmd string = os.Args[1]
 
-	//check the value of 1st arg to determine function to run
+	//determines what function to run based on the cli cmds
 	switch cmd {
 	case "create":
 		createFile(os.Args[2], os.Args[3])
 	case "config":
 		config()
 	default:
-		fmt.Printf("%s is not recognized as a command \n", os.Args[1])
+		fmt.Printf("%s is not recognized as a command \n", cmd)
 	}
 
 }
 
+//Creates a text file in the project directory
 func createFile(fileName, text string) {
-	//creates a text file in the project directory
+
 	//the underscore is an unused error variable return from Create()
-	f, _ := os.Create(fileName + ".txt")
+	fileExtension := cfg.Section("options").Key("fileExtension").String()
+	f, _ := os.Create(fileName + fileExtension)
 
 	//writes a string to the file using the reference created with Create()
 	f.WriteString(text)
 }
 
+//Config currently prints out the contents of your config file
+//Eventually config will open up an editor for changing config settings
 func config() {
-	//go.ini
-	cfg, err := ini.Load("my.ini")
+	ini, err := ioutil.ReadFile("config.ini")
 	if err != nil {
-		switch err.(type) {
-		case *os.PathError:
-			println("Found a path error!")
-		}
-	} else {
-		fmt.Println("App Mode:", cfg.Section("").Key("app_mode").String())
+		fmt.Print(err)
 	}
+	fmt.Print(string(ini), "\n")
 }
