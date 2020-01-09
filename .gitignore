@@ -1,5 +1,7 @@
 # text files created by the program
 *.txt
+#except for the help file
+!help.txt 
 
 # builds created by go
 main

@@ -1,0 +1,7 @@
+
+GoNotes Commands
+
+create [filename] [text]
+edit [filename]
+delete [filename]
+config
