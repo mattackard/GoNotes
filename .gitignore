@@ -4,5 +4,5 @@
 # builds created by go
 main
 
-#config files
-*.ini
+#config files -- are ok for now
+#*.ini
