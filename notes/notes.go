@@ -49,3 +49,9 @@ func Edit(fileName string) {
 	//Terminal UI library?
 	Print(fileName)
 }
+
+//Delete removes the given file
+func Delete(fileName string) {
+	os.Remove(fileName)
+	fmt.Printf("%s has been deleted \n", fileName)
+}

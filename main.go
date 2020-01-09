@@ -24,6 +24,8 @@ func main() {
 		notes.Config()
 	case "edit":
 		notes.Edit(os.Args[2])
+	case "delete":
+		notes.Delete(os.Args[2])
 	default:
 		fmt.Printf("%s is not recognized as a command \n", cmd)
 	}
