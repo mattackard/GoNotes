@@ -3,9 +3,10 @@ GoNotes is a CLI tool for taking notes.
 
 ## User Stories
 - [X] Users can create a new notes that save to a file
-- [ ] Users can open existing files and continue taking notes
+- [X] Users can view saved notes in the terminal
+- [X] Users can delete note files
 - [ ] Users can edit existing notes
-- [ ] Users can delete note files
+- [ ] Users can browse their list of notes
 
 ## Using GoNotes via CLI
 To create a new notes file
