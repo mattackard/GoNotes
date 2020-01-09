@@ -14,7 +14,12 @@ func init() {
 
 func main() {
 	//Retrieves the cli cmd passed
-	var cmd string = os.Args[1]
+	var cmd string
+	if len(os.Args) < 2 {
+		cmd = ""
+	} else {
+		cmd = os.Args[1]
+	}
 
 	//determines what function to run based on the cli cmds
 	switch cmd {
@@ -27,6 +32,11 @@ func main() {
 	case "delete":
 		notes.Delete(os.Args[2])
 	default:
-		fmt.Printf("%s is not recognized as a command \n", cmd)
+		if cmd == "" {
+			fmt.Printf("You must enter a command. \n")
+		} else {
+			fmt.Printf("%s is not recognized as a command \n", cmd)
+		}
+		notes.Print("help.txt")
 	}
 }

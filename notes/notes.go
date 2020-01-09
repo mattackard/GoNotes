@@ -27,11 +27,7 @@ func CreateFile(config *ini.File, fileName string, text string) {
 //Config currently prints out the contents of your config file
 //Eventually config will open up an editor for changing config settings
 func Config() {
-	ini, err := ioutil.ReadFile("config.ini")
-	if err != nil {
-		fmt.Print(err)
-	}
-	fmt.Print(string(ini), "\n")
+	Print("config.ini")
 }
 
 //Print opens an existing file and prints the contents into the terminal
@@ -41,7 +37,7 @@ func Print(fileName string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Print(string(note))
+	fmt.Print(string(note), "\n")
 }
 
 //Edit allows for editing and saving notes
