@@ -29,3 +29,13 @@ func Config() {
 	}
 	fmt.Print(string(ini), "\n")
 }
+
+//Print opens an existing file and prints the contents into the terminal
+func Print(fileName string) {
+	//reads the whole file and stores as a string in note
+	note, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(string(note))
+}
