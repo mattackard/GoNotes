@@ -22,6 +22,8 @@ func main() {
 		notes.CreateFile(cfg, os.Args[2], os.Args[3])
 	case "config":
 		notes.Config()
+	case "edit":
+		notes.Edit(os.Args[2])
 	default:
 		fmt.Printf("%s is not recognized as a command \n", cmd)
 	}

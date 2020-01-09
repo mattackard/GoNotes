@@ -4,6 +4,7 @@ package notes
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"gopkg.in/ini.v1"
@@ -14,7 +15,10 @@ func CreateFile(config *ini.File, fileName string, text string) {
 
 	//the underscore is an unused error variable return from Create()
 	fileExtension := config.Section("options").Key("fileExtension").String()
-	f, _ := os.Create(fileName + fileExtension)
+	f, err := os.Create(fileName + fileExtension)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//writes a string to the file using the reference created with Create()
 	f.WriteString(text)
@@ -38,4 +42,10 @@ func Print(fileName string) {
 		log.Fatal(err)
 	}
 	fmt.Print(string(note))
+}
+
+//Edit allows for editing and saving notes
+func Edit(fileName string) {
+	//Terminal UI library?
+	Print(fileName)
 }
