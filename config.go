@@ -7,9 +7,12 @@ import (
 	"gopkg.in/ini.v1"
 )
 
-func loadConfig() *ini.File {
+var cfg *ini.File
+
+func loadConfig() {
 	//attempt to load the config file
 	config, err := ini.Load("config.ini")
+	cfg = config
 
 	//config error handling
 	if err != nil {
@@ -18,13 +21,12 @@ func loadConfig() *ini.File {
 		//if config.ini can't be found, create it
 		case *os.PathError:
 			println("Found a path error! Creating your .ini file. .")
-			config = createNewConfig()
+			cfg = createNewConfig()
 		//if any other error, log it
 		default:
 			log.Fatal(err)
 		}
 	}
-	return config
 }
 
 func createNewConfig() *ini.File {
@@ -35,5 +37,4 @@ func createNewConfig() *ini.File {
 		log.Fatal(err)
 	}
 	return config
-
 }

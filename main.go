@@ -5,13 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"gopkg.in/ini.v1"
+	"github.com/mattackard/project-0/notes"
 )
 
-var cfg *ini.File
-
 func init() {
-	cfg = loadConfig()
+	loadConfig()
 }
 
 func main() {
