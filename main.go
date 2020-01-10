@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/mattackard/project-0/config"
 	"github.com/mattackard/project-0/notes"
 )
 
+var cfg config.Config
+
 func init() {
-	loadConfig()
+	cfg = config.LoadConfig()
 }
 
 func main() {

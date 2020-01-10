@@ -7,15 +7,12 @@ import (
 	"log"
 	"os"
 
-	"gopkg.in/ini.v1"
+	"github.com/mattackard/project-0/config"
 )
 
 //CreateFile creates a text file in the project directory
-func CreateFile(config *ini.File, fileName string, text string) {
-
-	//the underscore is an unused error variable return from Create()
-	fileExtension := config.Section("options").Key("fileExtension").String()
-	f, err := os.Create(fileName + fileExtension)
+func CreateFile(config config.Config, fileName string, text string) {
+	f, err := os.Create(fileName + config.Options.FileExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,7 +24,7 @@ func CreateFile(config *ini.File, fileName string, text string) {
 //Config currently prints out the contents of your config file
 //Eventually config will open up an editor for changing config settings
 func Config() {
-	Print("config.ini")
+	Print("config.json")
 }
 
 //Print opens an existing file and prints the contents into the terminal

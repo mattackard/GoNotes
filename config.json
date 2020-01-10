@@ -1,0 +1,9 @@
+{
+    "paths": {
+        "notes": "./"
+    },
+    "options": {
+        "dateStamp": true,
+        "fileExtension": ".txt"
+    }
+}
