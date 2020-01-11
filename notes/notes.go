@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 
 	"github.com/mattackard/project-0/config"
 )
@@ -40,7 +41,15 @@ func Print(fileName string) {
 //Edit allows for editing and saving notes
 func Edit(fileName string) {
 	//Terminal UI library?
-	Print(fileName)
+	cmd := exec.Command("nano", fileName)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		println("Eror is not nil")
+		log.Fatal(err)
+	}
 }
 
 //Delete removes the given file
