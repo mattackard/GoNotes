@@ -22,10 +22,9 @@ func CreateFile(config config.Config, fileName string, text string) {
 	f.WriteString(text)
 }
 
-//Config currently prints out the contents of your config file
-//Eventually config will open up an editor for changing config settings
+//Config opens the user's config file in the text editor
 func Config() {
-	Print("config.json")
+	Edit("config.json")
 }
 
 //Print opens an existing file and prints the contents into the terminal
