@@ -13,7 +13,8 @@ import (
 
 //CreateFile creates a text file in the project directory
 func CreateFile(config config.Config, fileName string, text string) {
-	f, err := os.Create(fileName + config.Options.FileExtension)
+	os.MkdirAll(config.Paths.Notes, 0777)
+	f, err := os.Create(config.Paths.Notes + fileName + config.Options.FileExtension)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,17 +24,20 @@ func CreateFile(config config.Config, fileName string, text string) {
 }
 
 //Config opens the user's config file in the text editor
+//It will also create a config file if it can't be found
 func Config() {
 	Edit("config.json")
 }
 
 //Print opens an existing file and prints the contents into the terminal
 func Print(fileName string) {
-	//reads the whole file and stores as a string in note
+	//reads the whole file and stores as a byte[] in note
 	note, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//casts the byte[] to string for printing
 	fmt.Print(string(note), "\n")
 }
 

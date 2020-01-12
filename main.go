@@ -31,9 +31,9 @@ func main() {
 	case "config":
 		notes.Config()
 	case "edit":
-		notes.Edit(os.Args[2])
+		notes.Edit(cfg.Paths.Notes + os.Args[2] + cfg.Options.FileExtension)
 	case "delete":
-		notes.Delete(os.Args[2])
+		notes.Delete(cfg.Paths.Notes + os.Args[2] + cfg.Options.FileExtension)
 	default:
 		if cmd == "" {
 			fmt.Printf("You must enter a command. \n")
