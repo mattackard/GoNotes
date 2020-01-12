@@ -39,11 +39,14 @@ func Print(fileName string) {
 
 //Edit allows for editing and saving notes
 func Edit(fileName string) {
-	//Terminal UI library?
 	cmd := exec.Command("nano", fileName)
+
+	//Exec defaults Stdin, out, err to dev/null unless specified
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+
+	//Open file in nano
 	err := cmd.Run()
 	if err != nil {
 		println("Eror is not nil")
