@@ -2,6 +2,7 @@
 package notes
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,15 +13,26 @@ import (
 )
 
 //CreateFile creates a text file in the project directory
-func CreateFile(config config.Config, fileName string, text string) {
+func CreateFile(config config.Config, filePath string) {
 	os.MkdirAll(config.Paths.Notes, 0777)
-	f, err := os.Create(config.Paths.Notes + fileName + config.Options.FileExtension)
+
+	//get flags and args from the original terminal call
+	open := flag.Bool("open", false, "open file for editing after creating")
+	flag.Parse()
+	args := flag.Args()
+
+	//create the note file using the extension and path from config
+	f, err := os.Create(filePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//writes a string to the file using the reference created with Create()
-	f.WriteString(text)
+	f.WriteString(args[1])
+
+	//opens the file in the editor if open flag is set
+	if *open {
+		Edit(filePath)
+	}
 }
 
 //Config opens the user's config file in the text editor

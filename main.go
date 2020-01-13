@@ -24,16 +24,26 @@ func main() {
 		cmd = os.Args[1]
 	}
 
+	//Removes cmd from os.Args passed in to allow for parsing command-dependent flags
+	os.Args = os.Args[1:]
+
+	//sets a variable to the full file path passed in through args
+	//if the command takes a filepath
+	var fullPath string
+	if len(os.Args) > 1 {
+		fullPath = cfg.Paths.Notes + os.Args[1] + cfg.Options.FileExtension
+	}
+
 	//determines what function to run based on the cli cmds
 	switch cmd {
 	case "create":
-		notes.CreateFile(cfg, os.Args[2], os.Args[3])
+		notes.CreateFile(cfg, fullPath)
 	case "config":
 		notes.Config()
 	case "edit":
-		notes.Edit(cfg.Paths.Notes + os.Args[2] + cfg.Options.FileExtension)
+		notes.Edit(fullPath)
 	case "delete":
-		notes.Delete(cfg.Paths.Notes + os.Args[2] + cfg.Options.FileExtension)
+		notes.Delete(fullPath)
 	default:
 		if cmd == "" {
 			fmt.Printf("You must enter a command. \n")
