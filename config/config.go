@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 )
 
 //Config stores the path and options for GoNotes
@@ -26,8 +27,12 @@ type Option struct {
 
 //LoadConfig loads the ./config.json and parses it into the Config struct
 func LoadConfig() (cfg Config) {
+	//make sure the os is referencing the project root
+	goPath := os.Getenv("GOPATH")
+	projectDir := path.Join(goPath, "src/github.com/mattackard/project-0/")
+
 	//attempt to load the config file
-	jsonFile, err := os.Open("config.json")
+	jsonFile, err := os.Open(projectDir + "/config.json")
 	defer jsonFile.Close()
 
 	//config error handling

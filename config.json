@@ -1,6 +1,6 @@
 {
     "paths": {
-        "notes": "./MyNoteDirectory/"
+        "notes": "./MyNoteFiles/"
     },
     "options": {
         "dateStamp": true,
