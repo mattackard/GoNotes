@@ -1,3 +1,4 @@
+//Package config loads and structures the configuration values for GoNotes
 package config
 
 import (
