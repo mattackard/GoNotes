@@ -2,7 +2,6 @@
 package notes
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -13,13 +12,8 @@ import (
 )
 
 //CreateFile creates a text file in the project directory
-func CreateFile(config config.Config, filePath string) {
+func CreateFile(config config.Config, filePath string, open *bool) {
 	os.MkdirAll(config.Paths.Notes, 0777)
-
-	//get flags and args from the original terminal call
-	open := flag.Bool("open", false, "open file for editing after creating")
-	flag.Parse()
-	args := flag.Args()
 
 	//create the note file using the extension and path from config
 	f, err := os.Create(filePath)
@@ -27,7 +21,7 @@ func CreateFile(config config.Config, filePath string) {
 		log.Fatal(err)
 	}
 
-	f.WriteString(args[1])
+	f.WriteString(os.Args[1])
 
 	//opens the file in the editor if open flag is set
 	if *open {
@@ -42,7 +36,7 @@ func Config() {
 }
 
 //Print opens an existing file and prints the contents into the terminal
-func Print(fileName string) {
+func Print(fileName string) string {
 	//reads the whole file and stores as a byte[] in note
 	note, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -51,6 +45,7 @@ func Print(fileName string) {
 
 	//casts the byte[] to string for printing
 	fmt.Print(string(note), "\n")
+	return string(note)
 }
 
 //Edit allows for editing and saving notes
@@ -65,7 +60,6 @@ func Edit(fileName string) {
 	//Open file in nano
 	err := cmd.Run()
 	if err != nil {
-		println("Eror is not nil")
 		log.Fatal(err)
 	}
 }
@@ -73,5 +67,4 @@ func Edit(fileName string) {
 //Delete removes the given file
 func Delete(fileName string) {
 	os.Remove(fileName)
-	fmt.Printf("%s has been deleted \n", fileName)
 }

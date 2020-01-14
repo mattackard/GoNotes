@@ -2,6 +2,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -10,14 +11,14 @@ import (
 )
 
 var cfg config.Config
+var cmd string
+var fullPath string
+var open *bool
 
 func init() {
 	cfg = config.LoadConfig()
-}
 
-func main() {
 	//Retrieves the cli cmd passed
-	var cmd string
 	if len(os.Args) < 2 {
 		cmd = ""
 	} else {
@@ -27,17 +28,24 @@ func main() {
 	//Removes cmd from os.Args passed in to allow for parsing command-dependent flags
 	os.Args = os.Args[1:]
 
+	//get flags and args from the original terminal call
+	open = flag.Bool("open", false, "open file for editing after creating")
+	flag.Parse()
+	os.Args = flag.Args()
+
 	//sets a variable to the full file path passed in through args
 	//if the command takes a filepath
-	var fullPath string
 	if len(os.Args) > 1 {
-		fullPath = cfg.Paths.Notes + os.Args[1] + cfg.Options.FileExtension
+		fullPath = cfg.Paths.Notes + os.Args[0] + cfg.Options.FileExtension
 	}
+}
+
+func main() {
 
 	//determines what function to run based on the cli cmds
 	switch cmd {
 	case "create":
-		notes.CreateFile(cfg, fullPath)
+		notes.CreateFile(cfg, fullPath, open)
 	case "config":
 		notes.Config()
 	case "edit":
