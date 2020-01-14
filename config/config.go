@@ -5,8 +5,9 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path"
 )
+
+var defaultConfig Config
 
 //Config stores the path and options for GoNotes
 type Config struct {
@@ -27,12 +28,8 @@ type Option struct {
 
 //LoadConfig loads the ./config.json and parses it into the Config struct
 func LoadConfig() (cfg Config) {
-	//make sure the os is referencing the project root
-	goPath := os.Getenv("GOPATH")
-	projectDir := path.Join(goPath, "src/github.com/mattackard/project-0/")
-
 	//attempt to load the config file
-	jsonFile, err := os.Open(projectDir + "/config.json")
+	jsonFile, err := os.Open("./config.json")
 	defer jsonFile.Close()
 
 	//config error handling
@@ -42,7 +39,7 @@ func LoadConfig() (cfg Config) {
 		//if config.ini can't be found, create it
 		case *os.PathError:
 			println("Found a path error! Creating your config.json file. . .")
-			jsonFile = CreateNewConfig()
+			jsonFile = createNewConfig()
 		//if any other error, log it
 		default:
 			log.Fatal(err)
@@ -54,9 +51,9 @@ func LoadConfig() (cfg Config) {
 }
 
 //CreateNewConfig generates a new config.json file at ./config.json
-func CreateNewConfig() *os.File {
-	os.Create("config.json")
-	newConfig := Config{
+func createNewConfig() *os.File {
+	os.Create("./config.json")
+	defaultConfig = Config{
 		Paths: Path{
 			Notes: "./",
 		},
@@ -65,7 +62,7 @@ func CreateNewConfig() *os.File {
 			FileExtension: ".txt",
 		},
 	}
-	file, err := json.MarshalIndent(newConfig, "", "    ")
+	file, err := json.MarshalIndent(defaultConfig, "", "    ")
 	err = ioutil.WriteFile("config.json", file, 0777)
 	if err != nil {
 		log.Fatal(err)

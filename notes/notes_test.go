@@ -34,9 +34,9 @@ func TestCreateFile(t *testing.T) {
 		t.Errorf("Text in created file does not match text passed in : %s", string(text))
 	}
 
-	//All tests done. Delete test files
 	Delete("testing.txt")
 	os.Remove("./MyNoteFiles")
+	Delete("config.json")
 }
 
 func ExampleCreateFile() {
@@ -48,6 +48,7 @@ func ExampleCreateFile() {
 	//Output: true
 
 	//Delete("TestFile.txt")
+	//Delete("config.json")
 }
 
 func TestConfig(t *testing.T) {
@@ -67,7 +68,9 @@ func TestPrint(t *testing.T) {
 	if text != "Text" {
 		t.Errorf("File's contents '%s' do not match text given '%s'", text, "Text")
 	}
+
 	Delete("TestFile.txt")
+	Delete("config.json")
 }
 
 func ExamplePrint() {
@@ -80,6 +83,7 @@ func ExamplePrint() {
 	//Output: true
 
 	//Delete("TestFile.txt")
+	//Delete("config.json")
 }
 
 func TestEdit(t *testing.T) {
@@ -99,6 +103,8 @@ func TestDelete(t *testing.T) {
 	if file != nil {
 		t.Errorf("The test file could not be deleted")
 	}
+
+	Delete("config.json")
 }
 
 func ExampleDelete() {
@@ -109,4 +115,6 @@ func ExampleDelete() {
 	_, err := os.Open("TestFile.txt")
 	fmt.Println(err != nil)
 	//Output: true
+
+	//Delete("config.json")
 }
