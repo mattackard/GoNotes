@@ -3,12 +3,18 @@ package config
 
 import (
 	"encoding/json"
+	"flag"
 	"io/ioutil"
 	"log"
 	"os"
 )
 
-var defaultConfig Config
+//Mycfg contains the configuration loaded from config.json
+//If no cofig.json can be found, the default will be applied
+var Mycfg Config
+
+//Default contains a default config struct
+var Default Config
 
 //Config stores the path and options for GoNotes
 type Config struct {
@@ -24,8 +30,56 @@ type Path struct {
 //Option stores user defined options for program functionality
 type Option struct {
 	DateStamp     bool   `json:"dateStamp"`
+	InitEditor    bool   `json:"initEditor"`
 	FileExtension string `json:"fileExtension"`
 	Port          string `json:"port"`
+}
+
+//Cmd stores the command to execute via command line
+var Cmd string
+
+//FullPath holds the path to use when referencing note files
+var FullPath string
+
+//Open is a flag for opening a note for editing immediately after creation
+var Open *bool
+
+//DateStamp is a flag to initialize new note files with the current date
+var DateStamp *bool
+
+func init() {
+
+	Default = Config{
+		Paths: Path{
+			Notes: "./",
+		},
+		Options: Option{
+			DateStamp:     true,
+			InitEditor:    false,
+			FileExtension: ".txt",
+			Port:          ":5555",
+		},
+	}
+	Mycfg = LoadConfig()
+
+	//Retrieves the cli cmd passed
+	if len(os.Args) < 2 {
+		Cmd = ""
+	} else {
+		Cmd = os.Args[1]
+	}
+
+	//get flags and args from the original terminal call
+	Open = flag.Bool("open", false, "open file for editing after creating")
+	DateStamp = flag.Bool("date", false, "Initializes new note files with the current date")
+	flag.Parse()
+	os.Args = flag.Args()
+
+	//sets a variable to the full file path passed in through args
+	//if the command takes a filepath
+	if len(os.Args) > 1 {
+		FullPath = Mycfg.Paths.Notes + os.Args[1] + Mycfg.Options.FileExtension
+	}
 }
 
 //LoadConfig loads the ./config.json and parses it into the Config struct
@@ -55,16 +109,7 @@ func LoadConfig() (cfg Config) {
 //CreateNewConfig generates a new config.json file at ./config.json
 func createNewConfig() *os.File {
 	os.Create("./config.json")
-	defaultConfig = Config{
-		Paths: Path{
-			Notes: "./",
-		},
-		Options: Option{
-			DateStamp:     true,
-			FileExtension: ".txt",
-		},
-	}
-	file, err := json.MarshalIndent(defaultConfig, "", "    ")
+	file, err := json.MarshalIndent(Default, "", "    ")
 	err = ioutil.WriteFile("config.json", file, 0777)
 	if err != nil {
 		log.Fatal(err)

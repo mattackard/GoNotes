@@ -21,7 +21,7 @@ func CreateFile(config config.Config, filePath string, open *bool) {
 		log.Fatal(err)
 	}
 
-	f.WriteString(os.Args[1])
+	f.WriteString(os.Args[2])
 
 	//opens the file in the editor if open flag is set
 	if *open {

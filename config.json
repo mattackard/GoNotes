@@ -1,9 +1,10 @@
 {
     "paths": {
-        "notes": "./MyNoteFiles/"
+        "notes": "./"
     },
     "options": {
         "dateStamp": true,
+        "initEditor": false,
         "fileExtension": ".txt",
         "port": ":5555"
     }
