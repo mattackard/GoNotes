@@ -4,12 +4,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
-
-	"github.com/zserge/webview"
 
 	"github.com/mattackard/project-0/config"
 	"github.com/mattackard/project-0/notes"
+	"github.com/zserge/webview"
 )
 
 var cfg config.Config
@@ -55,7 +56,25 @@ func main() {
 	case "delete":
 		notes.Delete(fullPath)
 	case "gui":
-		webview.Open("GoNotes", "file:///home/ubuntu/go/src/github.com/mattackard/project-0/gui/gui.html", 600, 800, true)
+		go webview.Open("GoNotes", "file:///home/ubuntu/go/src/github.com/mattackard/project-0/gui/gui.html", 600, 800, true)
+		http.HandleFunc("/newNote", func(w http.ResponseWriter, r *http.Request) {
+			//fmt.Println("new note was clicked")
+			fmt.Fprint(w, "Changed")
+		})
+		http.HandleFunc("/deleteNote", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Println("delete note was clicked")
+			io.WriteString(w, "Changed")
+		})
+		http.HandleFunc("/saveNote", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Println("save note was clicked")
+			io.WriteString(w, "Changed")
+		})
+		http.HandleFunc("/settings", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Println("settings was clicked")
+			io.WriteString(w, "Changed")
+		})
+		fmt.Println("Server is running at localhost", cfg.Options.Port)
+		http.ListenAndServe(cfg.Options.Port, nil)
 	default:
 		if cmd == "" {
 			fmt.Printf("You must enter a command. \n")

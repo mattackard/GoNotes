@@ -4,6 +4,7 @@
     },
     "options": {
         "dateStamp": true,
-        "fileExtension": ".txt"
+        "fileExtension": ".txt",
+        "port": ":5555"
     }
 }

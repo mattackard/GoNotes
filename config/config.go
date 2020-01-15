@@ -25,6 +25,7 @@ type Path struct {
 type Option struct {
 	DateStamp     bool   `json:"dateStamp"`
 	FileExtension string `json:"fileExtension"`
+	Port          string `json:"port"`
 }
 
 //LoadConfig loads the ./config.json and parses it into the Config struct
