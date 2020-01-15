@@ -9,15 +9,12 @@ import (
 	"github.com/mattackard/project-0/config"
 )
 
-var cfg config.Config
-
 func TestCreateFile(t *testing.T) {
-	cfg = config.LoadConfig()
-	os.Args = []string{"File", "Text"}
+	os.Args = []string{"", "File", "Text"}
 
 	//Create a test file
 	editFile := false
-	CreateFile(cfg, "testing.txt", &editFile)
+	CreateFile(config.Mycfg, "testing.txt", &editFile)
 
 	//Check test file has been created
 	_, err := os.Open("testing.txt")
@@ -40,9 +37,8 @@ func TestCreateFile(t *testing.T) {
 }
 
 func ExampleCreateFile() {
-	cfg = config.LoadConfig()
 	editFile := false
-	CreateFile(cfg, "TestFile.txt", &editFile)
+	CreateFile(config.Mycfg, "TestFile.txt", &editFile)
 	file, _ := os.Open("TestFile.txt")
 	fmt.Println(file != nil)
 	//Output: true
@@ -60,10 +56,9 @@ func ExampleConfig() {
 }
 
 func TestPrint(t *testing.T) {
-	cfg = config.LoadConfig()
 	editFile := false
-	os.Args = []string{"File", "Text"}
-	CreateFile(cfg, "TestFile.txt", &editFile)
+	os.Args = []string{"", "File", "Text"}
+	CreateFile(config.Mycfg, "TestFile.txt", &editFile)
 	text := Print("TestFile.txt")
 	if text != "Text" {
 		t.Errorf("File's contents '%s' do not match text given '%s'", text, "Text")
@@ -74,10 +69,9 @@ func TestPrint(t *testing.T) {
 }
 
 func ExamplePrint() {
-	cfg = config.LoadConfig()
 	editFile := false
-	os.Args = []string{"File", "Text"}
-	CreateFile(cfg, "TestFile.txt", &editFile)
+	os.Args = []string{"", "File", "Text"}
+	CreateFile(config.Mycfg, "TestFile.txt", &editFile)
 	text := Print("TestFile.txt")
 	fmt.Println(text == "Text")
 	//Output: true
@@ -95,9 +89,8 @@ func ExampleEdit() {
 }
 
 func TestDelete(t *testing.T) {
-	cfg = config.LoadConfig()
 	editFile := false
-	CreateFile(cfg, "TestFile.txt", &editFile)
+	CreateFile(config.Mycfg, "TestFile.txt", &editFile)
 	Delete("TestFile.txt")
 	file, _ := os.Open("TestFile.txt")
 	if file != nil {
@@ -108,9 +101,8 @@ func TestDelete(t *testing.T) {
 }
 
 func ExampleDelete() {
-	cfg = config.LoadConfig()
 	editFile := false
-	CreateFile(cfg, "TestFile.txt", &editFile)
+	CreateFile(config.Mycfg, "TestFile.txt", &editFile)
 	Delete("TestFile.txt")
 	_, err := os.Open("TestFile.txt")
 	fmt.Println(err != nil)
