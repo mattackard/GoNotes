@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/zserge/webview"
+
 	"github.com/mattackard/project-0/config"
 	"github.com/mattackard/project-0/notes"
 )
@@ -52,6 +54,8 @@ func main() {
 		notes.Edit(fullPath)
 	case "delete":
 		notes.Delete(fullPath)
+	case "gui":
+		webview.Open("GoNotes", "file:///home/ubuntu/go/src/github.com/mattackard/project-0/gui/gui.html", 600, 800, true)
 	default:
 		if cmd == "" {
 			fmt.Printf("You must enter a command. \n")
