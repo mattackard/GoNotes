@@ -4,8 +4,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/mattackard/project-0/config"
-	"github.com/mattackard/project-0/notes"
+	"github.com/mattackard/project-0/pkg/config"
+	"github.com/mattackard/project-0/pkg/notes"
 )
 
 func main() {

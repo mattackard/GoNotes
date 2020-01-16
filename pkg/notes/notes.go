@@ -8,7 +8,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/mattackard/project-0/config"
+	"github.com/mattackard/project-0/pkg/config"
 )
 
 //CreateFile creates a text file in the project directory

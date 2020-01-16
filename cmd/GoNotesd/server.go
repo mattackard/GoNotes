@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mattackard/project-0/config"
+	"github.com/mattackard/project-0/pkg/config"
 )
 
 type note struct {

@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/mattackard/project-0/config"
+	"github.com/mattackard/project-0/pkg/config"
 )
 
 func TestCreateFile(t *testing.T) {
