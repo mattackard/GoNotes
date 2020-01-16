@@ -17,7 +17,7 @@ newNote.addEventListener("click", e => {
         noteTitle.innerText = "";
         noteTitle.insertAdjacentElement("afterbegin", titleInput);
         response.json().then(json => {
-            noteEditor.innerText = json.text;
+            noteEditor.value = json.text;
         });
     })
     
@@ -36,7 +36,7 @@ deleteNote.addEventListener("click", e => {
     })
     .then(response => {
         if (response.status == 200) {
-                noteEditor.innerText = `${noteTitle.innerText} has been deleted.`;
+                noteEditor.value = `${noteTitle.innerText} has been deleted.`;
                 noteTitle.innerText = "";
         }
         else {
@@ -47,7 +47,14 @@ deleteNote.addEventListener("click", e => {
 
 saveNote.addEventListener("click", e => {
     e.preventDefault();
-    let newTitle = titleInput.value;
+    //issues with saving config.json
+    //currently not getting config.json from noteTitle
+    let newTitle = "";
+    if (titleInput.value == "") {
+        newTitle = noteTitle.value;
+    } else {
+        newTitle = titleInput.value;
+    }
     titleInput.value = "";
     titleInput.remove();
     noteTitle.innerText = newTitle;
@@ -60,6 +67,7 @@ saveNote.addEventListener("click", e => {
         })
     })
     .then(response => {
+        console.log(response.status);
         if (response.status == 200) {
             alert("Save successful");
         } else {
@@ -74,7 +82,7 @@ settings.addEventListener("click", e => {
     .then(response => {
         response.json().then(json => {
             noteTitle.innerText = json.fileName;
-            noteEditor.innerText = json.text;
+            noteEditor.value = json.text;
         });
     })
 })

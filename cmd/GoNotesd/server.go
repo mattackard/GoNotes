@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/mattackard/project-0/pkg/config"
@@ -80,7 +81,13 @@ func saveNote(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	filePath := noteDir + requestNote.FileName + extension
+	//If a file extension is entered, use it. Otherwise use the extension from config
+	var filePath string
+	if strings.Contains(requestNote.FileName, ".") {
+		filePath = noteDir + requestNote.FileName
+	} else {
+		filePath = noteDir + requestNote.FileName + extension
+	}
 	notes.Update(filePath, requestNote.Text)
 
 	fmt.Fprint(w, "OK")
