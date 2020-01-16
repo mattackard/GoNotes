@@ -1,7 +1,13 @@
 
 GoNotes Commands
 
-create [filename] [text]
+create [flags] [filename] [text]
+    -open   to open newly created file in editor
+
 edit [filename]
+
 delete [filename]
+
 config
+
+list
