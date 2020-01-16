@@ -16,6 +16,11 @@ func main() {
 		notes.CreateFile(config.Mycfg, config.FullPath, config.Open)
 	case "config":
 		notes.Config()
+	case "list":
+		myDir := notes.List(config.Mycfg.Paths.Notes)
+		for _, v := range myDir {
+			fmt.Println(v)
+		}
 	case "edit":
 		notes.Edit(config.FullPath)
 	case "delete":

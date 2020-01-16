@@ -74,3 +74,16 @@ func Update(config config.Config, fileName string, text string) {
 	os.MkdirAll(config.Paths.Notes, 0777)
 	ioutil.WriteFile(fileName, []byte(text), 0777)
 }
+
+//List returns a slice of string file names of all files in the given directory
+func List(directory string) []string {
+	files, err := ioutil.ReadDir(directory)
+	if err != nil {
+		panic(err)
+	}
+	var fileNames []string
+	for _, v := range files {
+		fileNames = append(fileNames, v.Name())
+	}
+	return fileNames
+}
