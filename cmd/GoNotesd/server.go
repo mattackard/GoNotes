@@ -3,18 +3,22 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/mattackard/project-0/pkg/config"
+	"github.com/mattackard/project-0/pkg/notes"
 )
 
 type note struct {
 	FileName string `json:"fileName"`
-	Title    string `json:"title"`
 	Text     string `json:"text"`
 }
 
 var currentNote note
+var noteDir string = config.Mycfg.Paths.Notes
+var extension string = config.Mycfg.Options.FileExtension
 
 func main() {
 	http.HandleFunc("/newNote", newNote)
@@ -34,12 +38,13 @@ func setHeaders(w http.ResponseWriter) http.ResponseWriter {
 
 func newNote(w http.ResponseWriter, r *http.Request) {
 	//create a new note struct and build a json object
-	newNote := note{
-		FileName: "myfile.txt",
-		Title:    "New Note",
-		Text:     "New note endpoint",
+	currentTime := time.Now()
+	prettyTime := currentTime.Format("Mon January _2, 2006")
+	response := note{
+		FileName: "",
+		Text:     prettyTime + ", \n\n",
 	}
-	js, err := json.Marshal(newNote)
+	js, err := json.Marshal(response)
 	if err != nil {
 		panic(err)
 	}
@@ -50,12 +55,19 @@ func newNote(w http.ResponseWriter, r *http.Request) {
 
 func deleteNote(w http.ResponseWriter, r *http.Request) {
 	//create a new note struct and build a json object
-	newNote := note{
-		FileName: "myfile.txt",
-		Title:    "New Note",
-		Text:     "Delete note endpoint",
+	response := note{
+		FileName: "",
+		Text:     time.Now().Format("January 01, 2020"),
 	}
-	js, err := json.Marshal(newNote)
+	err := r.ParseForm()
+	if err != nil {
+		panic(err)
+	}
+	filePath := noteDir + r.FormValue("fileName") + extension
+	notes.Delete(filePath)
+	response.Text = filePath + " has been successfully deleted."
+
+	js, err := json.Marshal(response)
 	if err != nil {
 		panic(err)
 	}
@@ -66,28 +78,29 @@ func deleteNote(w http.ResponseWriter, r *http.Request) {
 
 func saveNote(w http.ResponseWriter, r *http.Request) {
 	//create a new note struct and build a json object
-	newNote := note{
-		FileName: "myfile.txt",
-		Title:    "New Note",
-		Text:     "Save note endpoint",
-	}
-	js, err := json.Marshal(newNote)
+	err := r.ParseForm()
 	if err != nil {
 		panic(err)
 	}
+	println(r.URL.Path)
+	println(r.Header.Get("Content-Type"))
+	filePath := noteDir + r.PostFormValue("fileName") + extension
+	notes.Update(filePath, r.PostFormValue("text"))
 
-	w = setHeaders(w)
-	w.Write(js)
+	fmt.Fprint(w, "OK")
 }
 
 func settings(w http.ResponseWriter, r *http.Request) {
 	//create a new note struct and build a json object
-	newNote := note{
-		FileName: "config.json",
-		Title:    "Settings",
-		Text:     "Settings endpoint",
+	file, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		panic(err)
 	}
-	js, err := json.Marshal(newNote)
+	response := note{
+		FileName: "config.json",
+		Text:     string(file),
+	}
+	js, err := json.Marshal(response)
 	if err != nil {
 		panic(err)
 	}

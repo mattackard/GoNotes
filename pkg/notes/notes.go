@@ -68,3 +68,8 @@ func Edit(fileName string) {
 func Delete(fileName string) {
 	os.Remove(fileName)
 }
+
+//Update overwrites the given file with the new content
+func Update(fileName string, text string) {
+	ioutil.WriteFile(fileName, []byte(text), 0777)
+}
