@@ -25,7 +25,15 @@ newNote.addEventListener("click", e => {
 
 openNote.addEventListener("click", e => {
     e.preventDefault();
-    noteEditor.value = "Open clicked";
+    noteEditor.value = "";
+    fetch("http://localhost:5555/dir")
+    .then(response => {
+        response.json().then(json => {
+            json.files.forEach(file => {
+                noteEditor.value += file + '\n';
+            });
+        });
+    })
 })
 
 deleteNote.addEventListener("click", e => {

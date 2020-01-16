@@ -17,8 +17,14 @@ type note struct {
 	Text     string `json:"text"`
 }
 
+type directory struct {
+	Root  string   `json:"root"`
+	Files []string `json:"files"`
+}
+
 func main() {
 	http.HandleFunc("/newNote", newNote)
+	http.HandleFunc("/dir", noteDir)
 	http.HandleFunc("/deleteNote", deleteNote)
 	http.HandleFunc("/saveNote", saveNote)
 	http.HandleFunc("/settings", settings)
@@ -111,6 +117,21 @@ func settings(w http.ResponseWriter, r *http.Request) {
 		Text:     string(file),
 	}
 	js, err := json.Marshal(response)
+	if err != nil {
+		panic(err)
+	}
+
+	w = setHeaders(w)
+	w.Write(js)
+}
+
+func noteDir(w http.ResponseWriter, r *http.Request) {
+	files := notes.List(config.Mycfg.Paths.Notes)
+	d := directory{
+		Root:  config.Mycfg.Paths.Notes,
+		Files: files,
+	}
+	js, err := json.Marshal(d)
 	if err != nil {
 		panic(err)
 	}
