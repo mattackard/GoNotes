@@ -70,6 +70,7 @@ func Delete(fileName string) {
 }
 
 //Update overwrites the given file with the new content
-func Update(fileName string, text string) {
+func Update(config config.Config, fileName string, text string) {
+	os.MkdirAll(config.Paths.Notes, 0777)
 	ioutil.WriteFile(fileName, []byte(text), 0777)
 }

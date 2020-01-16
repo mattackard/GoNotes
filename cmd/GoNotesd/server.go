@@ -17,9 +17,6 @@ type note struct {
 	Text     string `json:"text"`
 }
 
-var noteDir string = config.Mycfg.Paths.Notes
-var extension string = config.Mycfg.Options.FileExtension
-
 func main() {
 	http.HandleFunc("/newNote", newNote)
 	http.HandleFunc("/deleteNote", deleteNote)
@@ -63,10 +60,11 @@ func deleteNote(w http.ResponseWriter, r *http.Request) {
 	}
 	json.Unmarshal(delBody, &requestNote)
 
-	filePath := noteDir + requestNote.FileName + extension
+	filePath := config.Mycfg.Paths.Notes + requestNote.FileName + config.Mycfg.Options.FileExtension
 	notes.Delete(filePath)
 
-	fmt.Fprint(w, "OK")
+	w = setHeaders(w)
+	w.Write([]byte("OK"))
 }
 
 func saveNote(w http.ResponseWriter, r *http.Request) {
@@ -82,15 +80,24 @@ func saveNote(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//If a file extension is entered, use it. Otherwise use the extension from config
+	//Keeps the config.json file in the project root
 	var filePath string
-	if strings.Contains(requestNote.FileName, ".") {
-		filePath = noteDir + requestNote.FileName
+	if requestNote.FileName == "config.json" {
+		filePath = "./config.json"
+	} else if strings.Contains(requestNote.FileName, ".") {
+		filePath = config.Mycfg.Paths.Notes + requestNote.FileName
 	} else {
-		filePath = noteDir + requestNote.FileName + extension
+		filePath = config.Mycfg.Paths.Notes + requestNote.FileName + config.Mycfg.Options.FileExtension
 	}
-	notes.Update(filePath, requestNote.Text)
+	notes.Update(config.Mycfg, filePath, requestNote.Text)
 
-	fmt.Fprint(w, "OK")
+	//If file updated was config.json reload the global variable
+	if requestNote.FileName == "config.json" {
+		config.Mycfg = config.LoadConfig()
+	}
+
+	w = setHeaders(w)
+	w.Write([]byte("OK"))
 }
 
 func settings(w http.ResponseWriter, r *http.Request) {
