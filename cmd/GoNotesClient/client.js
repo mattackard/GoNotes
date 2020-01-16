@@ -1,38 +1,71 @@
 
 let newNote = document.getElementById("newNote");
+let openNote = document.getElementById("openNote");
 let deleteNote = document.getElementById("deleteNote");
 let saveNote = document.getElementById("saveNote");
 let settings = document.getElementById("settings");
 let noteEditor = document.getElementById("noteEditor");
+let noteTitle = document.getElementById("noteTitle")
+let titleInput = document.createElement("INPUT")
+titleInput.type = "text";
+titleInput.placeholder = "Enter title";
 
 newNote.addEventListener("click", e => {
     e.preventDefault();
     fetch("http://localhost:5555/newNote")
-        .then(response => {
+    .then(response => {
+        noteTitle.innerText = "";
+        noteTitle.insertAdjacentElement("afterbegin", titleInput);
         response.json().then(json => {
             noteEditor.innerText = json.text;
         });
     })
+    
 })
 
 deleteNote.addEventListener("click", e => {
     e.preventDefault();
-    fetch("http://localhost:5555/deleteNote")
+    fetch("http://localhost:5555/deleteNote", {
+        method: "POST",
+        header: {
+            "Content-Type": "application/json"
+        },
+        body: {
+            "fileName": noteTitle.innerText,
+        }
+    })
     .then(response => {
-        response.json().then(json => {
-            noteEditor.innerText = json.text;
-            alert(`${json.fileName} has been deleted.`)
-        })
+        if (response.status == 200) {
+                noteEditor.innerText = `${noteTitle.innerText} has been deleted.`;
+                noteTitle.innerText = "";
+        }
+        else {
+            noteEditor.innerText = `${response.status} ${response.statusText}`
+        }
     })
 })
 
 saveNote.addEventListener("click", e => {
     e.preventDefault();
-    fetch("http://localhost:5555/saveNote")
+    let newTitle = titleInput.value;
+    titleInput.remove();
+    noteTitle.innerText = newTitle;
+    fetch("http://localhost:5555/saveNote", {
+        method: "POST",
+        headers: {
+            "Content-Type" : "application/json"
+        },
+        body: {
+            "fileName": newTitle,
+            "text": noteEditor.value
+        }
+    })
     .then(response => {
-        response.json().then(json => {
-            noteEditor.innerText = json.text;
-        });
+        if (response.status == 200) {
+            alert("Save successful");
+        } else {
+            alert(`${response.status} ${response.statusText}`);
+        }
     })
 })
 
@@ -41,6 +74,7 @@ settings.addEventListener("click", e => {
     fetch("http://localhost:5555/settings")
     .then(response => {
         response.json().then(json => {
+            noteTitle.innerText = json.fileName;
             noteEditor.innerText = json.text;
         });
     })
