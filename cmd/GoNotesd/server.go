@@ -16,7 +16,6 @@ type note struct {
 	Text     string `json:"text"`
 }
 
-var currentNote note
 var noteDir string = config.Mycfg.Paths.Notes
 var extension string = config.Mycfg.Options.FileExtension
 
@@ -33,6 +32,7 @@ func setHeaders(w http.ResponseWriter) http.ResponseWriter {
 	//set header to expect json and allow cors
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
 	return w
 }
 
@@ -55,37 +55,33 @@ func newNote(w http.ResponseWriter, r *http.Request) {
 
 func deleteNote(w http.ResponseWriter, r *http.Request) {
 	//create a new note struct and build a json object
-	response := note{
-		FileName: "",
-		Text:     time.Now().Format("January 01, 2020"),
-	}
-	err := r.ParseForm()
+	var requestNote note
+	delBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
 	}
-	filePath := noteDir + r.FormValue("fileName") + extension
+	json.Unmarshal(delBody, &requestNote)
+
+	filePath := noteDir + requestNote.FileName + extension
 	notes.Delete(filePath)
-	response.Text = filePath + " has been successfully deleted."
 
-	js, err := json.Marshal(response)
-	if err != nil {
-		panic(err)
-	}
-
-	w = setHeaders(w)
-	w.Write(js)
+	fmt.Fprint(w, "OK")
 }
 
 func saveNote(w http.ResponseWriter, r *http.Request) {
 	//create a new note struct and build a json object
-	err := r.ParseForm()
+	var requestNote note
+	save, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
 	}
-	println(r.URL.Path)
-	println(r.Header.Get("Content-Type"))
-	filePath := noteDir + r.PostFormValue("fileName") + extension
-	notes.Update(filePath, r.PostFormValue("text"))
+	json.Unmarshal(save, &requestNote)
+	if err != nil {
+		panic(err)
+	}
+
+	filePath := noteDir + requestNote.FileName + extension
+	notes.Update(filePath, requestNote.Text)
 
 	fmt.Fprint(w, "OK")
 }

@@ -28,11 +28,11 @@ deleteNote.addEventListener("click", e => {
     fetch("http://localhost:5555/deleteNote", {
         method: "POST",
         header: {
-            "Content-Type": "application/json"
+            "Content-Type": "text/plain"
         },
-        body: {
+        body: JSON.stringify({
             "fileName": noteTitle.innerText,
-        }
+        })
     })
     .then(response => {
         if (response.status == 200) {
@@ -48,17 +48,16 @@ deleteNote.addEventListener("click", e => {
 saveNote.addEventListener("click", e => {
     e.preventDefault();
     let newTitle = titleInput.value;
+    titleInput.value = "";
     titleInput.remove();
     noteTitle.innerText = newTitle;
     fetch("http://localhost:5555/saveNote", {
         method: "POST",
-        headers: {
-            "Content-Type" : "application/json"
-        },
-        body: {
+        headers: {"Content-Type": "text/plain"},
+        body: JSON.stringify({
             "fileName": newTitle,
             "text": noteEditor.value
-        }
+        })
     })
     .then(response => {
         if (response.status == 200) {
