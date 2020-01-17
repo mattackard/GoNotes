@@ -13,7 +13,7 @@ h1 {
     font-size: 1em;
 }
 
-section {
+#main {
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -72,3 +72,45 @@ textarea {
     box-shadow: 0 5px 10px grey;
     padding: 0.5em;
 }
+
+#fileBrowser {
+    position: absolute;
+    top: 11vh;
+    left: 5%;
+    height: 86vh;
+    width: 90%;
+    background-color: rgba(255,255,255,0);
+    padding: 3em 1em;
+    z-index: 2;
+}
+
+#fileBrowser ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow: scroll;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.file {
+    height: 6em;
+    width: 6em;
+    margin: 1em 0.3em;
+}
+
+.file:hover {
+    opacity: 0.8;
+}
+
+.file p {
+    font-size: 0.8em;
+}
+
+.file svg {
+  pointer-events: none;
+}
+  
+  
