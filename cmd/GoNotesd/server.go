@@ -127,9 +127,20 @@ func settings(w http.ResponseWriter, r *http.Request) {
 }
 
 func noteDir(w http.ResponseWriter, r *http.Request) {
-	files := notes.List(config.Mycfg.Paths.Notes)
+	//Unmarshal post body
+	var newDir directory
+	save, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	json.Unmarshal(save, &newDir)
+	if err != nil {
+		panic(err)
+	}
+
+	files := notes.List(newDir.Root)
 	d := directory{
-		Root:  config.Mycfg.Paths.Notes,
+		Root:  newDir.Root,
 		Files: files,
 	}
 	js, err := json.Marshal(d)

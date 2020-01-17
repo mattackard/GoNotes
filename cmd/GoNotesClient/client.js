@@ -12,6 +12,8 @@ let titleInput = document.createElement("INPUT");
 titleInput.type = "text";
 titleInput.placeholder = "Enter title";
 
+let workingDir = "./"
+
 
 newNote.addEventListener("click", e => {
     e.preventDefault();
@@ -29,7 +31,20 @@ newNote.addEventListener("click", e => {
 openNote.addEventListener("click", e => {
     e.preventDefault();
     noteEditor.value = "";
-    fetch("http://localhost:5555/dir")
+    fetchDir(workingDir);
+});
+
+let fetchDir = (dir) => {
+    fetch("http://localhost:5555/dir", {
+        method: "POST",
+        header: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+            "root": dir,
+            "files": "",
+        })
+    })
     .then(response => {
         response.json().then(json => {
             json.files.forEach(file => {
@@ -50,11 +65,14 @@ openNote.addEventListener("click", e => {
             fileBrowser.style.zIndex = 2;
         });
     });
-});
+}
 
 files.addEventListener("click", e => {
     if (e.target.title.includes("/")) {
-        alert("changing directories is not currently supported");
+        files.innerHTML = "";
+        workingDir += e.target.title;
+        fetchDir(workingDir);
+
     } else {
         fetch("http://localhost:5555/getFile", {
             method: "POST",
@@ -62,7 +80,7 @@ files.addEventListener("click", e => {
                 "Content-Type": "text/plain"
             },
             body: JSON.stringify({
-                "fileName": e.target.title,
+                "fileName": workingDir + e.target.title,
                 "text": "",
             })
         })
