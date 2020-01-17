@@ -25,6 +25,7 @@ type directory struct {
 func main() {
 	http.HandleFunc("/newNote", newNote)
 	http.HandleFunc("/dir", noteDir)
+	http.HandleFunc("/getFile", getFile)
 	http.HandleFunc("/deleteNote", deleteNote)
 	http.HandleFunc("/saveNote", saveNote)
 	http.HandleFunc("/settings", settings)
@@ -132,6 +133,36 @@ func noteDir(w http.ResponseWriter, r *http.Request) {
 		Files: files,
 	}
 	js, err := json.Marshal(d)
+	if err != nil {
+		panic(err)
+	}
+
+	w = setHeaders(w)
+	w.Write(js)
+}
+
+func getFile(w http.ResponseWriter, r *http.Request) {
+	//Unmarshal post body
+	var requestFile note
+	save, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	json.Unmarshal(save, &requestFile)
+	if err != nil {
+		panic(err)
+	}
+
+	//Create response and marshal to json
+	file, err := ioutil.ReadFile(requestFile.FileName)
+	if err != nil {
+		panic(err)
+	}
+	response := note{
+		FileName: requestFile.FileName,
+		Text:     string(file),
+	}
+	js, err := json.Marshal(response)
 	if err != nil {
 		panic(err)
 	}

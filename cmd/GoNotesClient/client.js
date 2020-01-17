@@ -40,9 +40,9 @@ openNote.addEventListener("click", e => {
                                 <p title="${file}">${file}</p>
                             </li>`;
                 } else {
-                    elem = `<li class="file" title="${file}">
+                    elem = `<li class="file" title="${file}/">
                                 <svg height="60" version="1.1" width="100" viewBox="3 2 20 20" ><g transform="translate(0 -1028.4)" title="${file}"><path d="m12 1034.4c0 1.1-0.895 2-2 2h-5-3c-1.1046 0-2 0.9-2 2v8 3c0 1.1 0.89543 2 2 2h20c1.105 0 2-0.9 2-2v-3-10c0-1.1-0.895-2-2-2h-10z" fill="#2980b9" title="${file}"/><path d="m2 2c-1.1046 0-2 0.8954-2 2v5h10v1h14v-5c0-1.1046-0.895-2-2-2h-10.281c-0.346-0.5969-0.979-1-1.719-1h-8z" fill="#2980b9" transform="translate(0 1028.4)" title="${file}"/><path d="m12 1033.4c0 1.1-0.895 2-2 2h-5-3c-1.1046 0-2 0.9-2 2v8 3c0 1.1 0.89543 2 2 2h20c1.105 0 2-0.9 2-2v-3-10c0-1.1-0.895-2-2-2h-10z" fill="#3498db" title="${file}"/></g></svg>
-                                <p title="${file}">${file}</p>
+                                <p title="${file}/">${file}/</p>
                             </li>`;
                 }
                 files.innerHTML += elem;
@@ -53,9 +53,28 @@ openNote.addEventListener("click", e => {
 });
 
 files.addEventListener("click", e => {
-    alert(e.target.title);
-    files.innerHTML = "";
-    fileBrowser.style.zIndex = -1;
+    if (e.target.title.includes("/")) {
+        alert("changing directories is not currently supported");
+    } else {
+        fetch("http://localhost:5555/getFile", {
+            method: "POST",
+            header: {
+                "Content-Type": "text/plain"
+            },
+            body: JSON.stringify({
+                "fileName": e.target.title,
+                "text": "",
+            })
+        })
+        .then(response => {
+            files.innerHTML = "";
+            fileBrowser.style.zIndex = -1;
+            response.json().then(json => {
+                noteTitle.innerText = json.fileName;
+                noteEditor.value = json.text;
+            });
+        });
+    }
 });
 
 deleteNote.addEventListener("click", e => {
