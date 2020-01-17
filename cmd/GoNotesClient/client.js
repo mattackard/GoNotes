@@ -1,4 +1,3 @@
-
 let newNote = document.getElementById("newNote");
 let openNote = document.getElementById("openNote");
 let deleteNote = document.getElementById("deleteNote");
@@ -6,12 +5,13 @@ let saveNote = document.getElementById("saveNote");
 let settings = document.getElementById("settings");
 let noteEditor = document.getElementById("noteEditor");
 let noteTitle = document.getElementById("noteTitle");
-let titleInput = document.createElement("INPUT");
-let fileBrowser = document.getElementById("fileBrowser");
 let files = document.getElementById("files");
-fileBrowser.style.zIndex = -1;
+let fileBrowser = document.getElementById("fileBrowser");
+
+let titleInput = document.createElement("INPUT");
 titleInput.type = "text";
 titleInput.placeholder = "Enter title";
+
 
 newNote.addEventListener("click", e => {
     e.preventDefault();

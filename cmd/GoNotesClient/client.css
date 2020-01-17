@@ -81,7 +81,7 @@ textarea {
     width: 90%;
     background-color: rgba(255,255,255,0);
     padding: 3em 1em;
-    z-index: 2;
+    z-index: -1;
 }
 
 #fileBrowser ul {
