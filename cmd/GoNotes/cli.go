@@ -13,7 +13,7 @@ func main() {
 	//determines what function to run based on the cli cmds
 	switch config.Cmd {
 	case "create":
-		notes.CreateFile(config.Mycfg, config.FullPath, config.Open)
+		notes.CreateFile(config.Mycfg.Paths.Notes, config.FullPath, config.Open)
 	case "config":
 		notes.Config()
 	case "list":

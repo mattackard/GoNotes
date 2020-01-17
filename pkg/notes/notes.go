@@ -7,13 +7,11 @@ import (
 	"log"
 	"os"
 	"os/exec"
-
-	"github.com/mattackard/project-0/pkg/config"
 )
 
 //CreateFile creates a text file in the project directory
-func CreateFile(config config.Config, filePath string, open *bool) {
-	os.MkdirAll(config.Paths.Notes, 0777)
+func CreateFile(path string, filePath string, open *bool) {
+	os.MkdirAll(path, 0777)
 
 	//create the note file using the extension and path from config
 	f, err := os.Create(filePath)
@@ -70,8 +68,8 @@ func Delete(fileName string) {
 }
 
 //Update overwrites the given file with the new content
-func Update(config config.Config, fileName string, text string) {
-	os.MkdirAll(config.Paths.Notes, 0777)
+func Update(path string, fileName string, text string) {
+	os.MkdirAll(path, 0777)
 	ioutil.WriteFile(fileName, []byte(text), 0777)
 }
 

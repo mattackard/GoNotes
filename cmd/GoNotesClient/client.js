@@ -12,8 +12,12 @@ let titleInput = document.createElement("INPUT");
 titleInput.type = "text";
 titleInput.placeholder = "Enter title";
 
-let workingDir = "./"
+let workingDir = "./";
 
+let parseTitle = path => {
+    let pathArr = path.split("/");
+    return pathArr[pathArr.length - 1];
+}
 
 newNote.addEventListener("click", e => {
     e.preventDefault();
@@ -84,7 +88,8 @@ files.addEventListener("click", e => {
                 "Content-Type": "text/plain"
             },
             body: JSON.stringify({
-                "fileName": workingDir + e.target.title,
+                "path" :workingDir,
+                "fileName": e.target.title,
                 "text": "",
             })
         })
@@ -92,7 +97,7 @@ files.addEventListener("click", e => {
             files.innerHTML = "";
             fileBrowser.style.zIndex = -1;
             response.json().then(json => {
-                noteTitle.innerText = json.fileName;
+                noteTitle.innerText = parseTitle(json.fileName);
                 noteEditor.value = json.text;
             });
         });
@@ -107,7 +112,9 @@ deleteNote.addEventListener("click", e => {
             "Content-Type": "text/plain"
         },
         body: JSON.stringify({
+            "path": workingDir,
             "fileName": noteTitle.innerText,
+            "text": "",
         })
     })
     .then(response => {
@@ -131,6 +138,7 @@ saveNote.addEventListener("click", e => {
         method: "POST",
         headers: {"Content-Type": "text/plain"},
         body: JSON.stringify({
+            "path": workingDir,
             "fileName": newTitle,
             "text": noteEditor.value
         })
@@ -145,7 +153,7 @@ settings.addEventListener("click", e => {
     fetch("http://localhost:5555/settings")
     .then(response => {
         response.json().then(json => {
-            noteTitle.innerText = json.fileName;
+            noteTitle.innerText = parseTitle(json.fileName);
             noteEditor.value = json.text;
         });
     });

@@ -13,6 +13,7 @@ import (
 )
 
 type note struct {
+	Path     string `json:"path"`
 	FileName string `json:"fileName"`
 	Text     string `json:"text"`
 }
@@ -67,7 +68,7 @@ func deleteNote(w http.ResponseWriter, r *http.Request) {
 	}
 	json.Unmarshal(delBody, &requestNote)
 
-	filePath := config.Mycfg.Paths.Notes + requestNote.FileName + config.Mycfg.Options.FileExtension
+	filePath := requestNote.Path + requestNote.FileName + config.Mycfg.Options.FileExtension
 	notes.Delete(filePath)
 
 	w = setHeaders(w)
@@ -92,11 +93,12 @@ func saveNote(w http.ResponseWriter, r *http.Request) {
 	if requestNote.FileName == "config.json" {
 		filePath = "./config.json"
 	} else if strings.Contains(requestNote.FileName, ".") {
-		filePath = config.Mycfg.Paths.Notes + requestNote.FileName
+		println("dot in filename")
+		filePath = requestNote.Path + requestNote.FileName
 	} else {
-		filePath = config.Mycfg.Paths.Notes + requestNote.FileName + config.Mycfg.Options.FileExtension
+		filePath = requestNote.Path + requestNote.FileName + config.Mycfg.Options.FileExtension
 	}
-	notes.Update(config.Mycfg, filePath, requestNote.Text)
+	notes.Update(requestNote.Path, filePath, requestNote.Text)
 
 	//If file updated was config.json reload the global variable
 	if requestNote.FileName == "config.json" {
@@ -114,6 +116,7 @@ func settings(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	response := note{
+		Path:     "./",
 		FileName: "config.json",
 		Text:     string(file),
 	}
@@ -165,11 +168,12 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Create response and marshal to json
-	file, err := ioutil.ReadFile(requestFile.FileName)
+	file, err := ioutil.ReadFile(requestFile.Path + requestFile.FileName)
 	if err != nil {
 		panic(err)
 	}
 	response := note{
+		Path:     requestFile.Path,
 		FileName: requestFile.FileName,
 		Text:     string(file),
 	}
