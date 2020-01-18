@@ -72,7 +72,7 @@ func Delete(fileName string) {
 //can also be used to create a file
 func Update(path string, fileName string, text string) {
 	os.MkdirAll(path, 0777)
-	_, err := ioutil.WriteFile(fileName, []byte(text), 0777)
+	err := ioutil.WriteFile(fileName, []byte(text), 0777)
 	if err != nil {
 		log.Fatal(err)
 	}
