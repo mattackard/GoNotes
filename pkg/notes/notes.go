@@ -1,4 +1,4 @@
-//Package notes is a package to create, edit, and delete notes from the command line
+//Package notes is a package to create, edit, and delete files as well as print the contents of a file and output all files in a directory
 package notes
 
 import (
@@ -9,7 +9,7 @@ import (
 	"os/exec"
 )
 
-//CreateFile creates a text file in the project directory
+//CreateFile creates a text file in directory defined in the user config
 func CreateFile(path string, filePath string, open *bool) {
 	os.MkdirAll(path, 0777)
 
@@ -28,14 +28,14 @@ func CreateFile(path string, filePath string, open *bool) {
 }
 
 //Config opens the user's config file in the text editor
-//It will also create a config file if it can't be found
+//If no config file can be found a default will be created and then opened
 func Config() {
 	Edit("config.json")
 }
 
 //Print opens an existing file and prints the contents into the terminal
 func Print(fileName string) string {
-	//reads the whole file and stores as a byte[] in note
+	//reads the file and stores as a byte[] in note
 	note, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		log.Fatal(err)
@@ -46,11 +46,12 @@ func Print(fileName string) string {
 	return string(note)
 }
 
-//Edit allows for editing and saving notes
+//Edit opens the given file in nano for editing and saving
 func Edit(fileName string) {
 	cmd := exec.Command("nano", fileName)
 
 	//Exec defaults Stdin, out, err to dev/null unless specified
+	//so you need to explicitly set the io
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -67,18 +68,25 @@ func Delete(fileName string) {
 	os.Remove(fileName)
 }
 
-//Update overwrites the given file with the new content
+//Update overwrites the given file with new text content
+//can also be used to create a file
 func Update(path string, fileName string, text string) {
 	os.MkdirAll(path, 0777)
-	ioutil.WriteFile(fileName, []byte(text), 0777)
+	_, err := ioutil.WriteFile(fileName, []byte(text), 0777)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //List returns a slice of string file names of all files in the given directory
 func List(directory string) []string {
+	//get all item in passed in directory
 	files, err := ioutil.ReadDir(directory)
 	if err != nil {
 		panic(err)
 	}
+
+	//put all file structs into a simple slice of filenames
 	var fileNames []string
 	for _, v := range files {
 		fileNames = append(fileNames, v.Name())

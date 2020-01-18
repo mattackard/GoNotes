@@ -26,6 +26,7 @@ func main() {
 	case "delete":
 		notes.Delete(config.FullPath)
 	default:
+		//prints out a help message with the possible commands if an unrecognized command is entered
 		if config.Cmd == "" {
 			fmt.Printf("You must enter a command. \n")
 		} else {

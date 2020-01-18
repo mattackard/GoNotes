@@ -47,14 +47,6 @@ func ExampleCreateFile() {
 	//Delete("config.json")
 }
 
-func TestConfig(t *testing.T) {
-
-}
-
-func ExampleConfig() {
-
-}
-
 func TestPrint(t *testing.T) {
 	editFile := false
 	os.Args = []string{"", "File", "Text"}
@@ -78,14 +70,6 @@ func ExamplePrint() {
 
 	//Delete("TestFile.txt")
 	//Delete("config.json")
-}
-
-func TestEdit(t *testing.T) {
-
-}
-
-func ExampleEdit() {
-
 }
 
 func TestDelete(t *testing.T) {

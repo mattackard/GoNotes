@@ -12,6 +12,7 @@ import (
 	"github.com/mattackard/project-0/pkg/notes"
 )
 
+//Note holds file information for files used in the editor
 type note struct {
 	Path     string `json:"path"`
 	FileName string `json:"fileName"`
@@ -24,28 +25,34 @@ type directory struct {
 }
 
 func main() {
+	//set up server endpoints
 	http.HandleFunc("/newNote", newNote)
 	http.HandleFunc("/dir", noteDir)
 	http.HandleFunc("/getFile", getFile)
 	http.HandleFunc("/deleteNote", deleteNote)
 	http.HandleFunc("/saveNote", saveNote)
 	http.HandleFunc("/settings", settings)
+
+	//start server on the port specified in the config file
 	fmt.Println("Server is running at localhost", config.Mycfg.Options.Port)
 	http.ListenAndServe(config.Mycfg.Options.Port, nil)
 }
 
+//set header to expect json and allow cors
 func setHeaders(w http.ResponseWriter) http.ResponseWriter {
-	//set header to expect json and allow cors
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
 	return w
 }
 
+//create a new note with datestamp and returns it as http response
 func newNote(w http.ResponseWriter, r *http.Request) {
-	//create a new note struct and build a json object
+	//get current date and format it
 	currentTime := time.Now()
 	prettyTime := currentTime.Format("Mon January _2, 2006")
+
+	//add date to top of file and add some newlines for formatting
 	response := note{
 		FileName: "",
 		Text:     prettyTime + ", \n\n",
@@ -60,7 +67,7 @@ func newNote(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteNote(w http.ResponseWriter, r *http.Request) {
-	//create a new note struct and build a json object
+	//read the request to get the filename to delete
 	var requestNote note
 	delBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -68,15 +75,17 @@ func deleteNote(w http.ResponseWriter, r *http.Request) {
 	}
 	json.Unmarshal(delBody, &requestNote)
 
+	//delete the file
 	filePath := requestNote.Path + requestNote.FileName + config.Mycfg.Options.FileExtension
 	notes.Delete(filePath)
 
+	//send back success response
 	w = setHeaders(w)
 	w.Write([]byte("OK"))
 }
 
 func saveNote(w http.ResponseWriter, r *http.Request) {
-	//create a new note struct and build a json object
+	//parse request to get files name and text content to save
 	var requestNote note
 	save, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -93,7 +102,6 @@ func saveNote(w http.ResponseWriter, r *http.Request) {
 	if requestNote.FileName == "config.json" {
 		filePath = "./config.json"
 	} else if strings.Contains(requestNote.FileName, ".") {
-		println("dot in filename")
 		filePath = requestNote.Path + requestNote.FileName
 	} else {
 		filePath = requestNote.Path + requestNote.FileName + config.Mycfg.Options.FileExtension
@@ -109,8 +117,9 @@ func saveNote(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK"))
 }
 
+//sends the config file back to the client
 func settings(w http.ResponseWriter, r *http.Request) {
-	//create a new note struct and build a json object
+	//load config.json and marshal into JSON
 	file, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		panic(err)
@@ -129,8 +138,9 @@ func settings(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
+//gets all items in the requested directory
 func noteDir(w http.ResponseWriter, r *http.Request) {
-	//Unmarshal post body
+	//Unmarshal post body to get requested directory
 	var newDir directory
 	save, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -141,6 +151,7 @@ func noteDir(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	//get the list of files in the requested directory and send in response
 	files := notes.List(newDir.Root)
 	d := directory{
 		Root:  newDir.Root,
@@ -155,8 +166,9 @@ func noteDir(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
+//gets the text content of a single file and returns it in response
 func getFile(w http.ResponseWriter, r *http.Request) {
-	//Unmarshal post body
+	//Unmarshal post body to get filename
 	var requestFile note
 	save, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -167,7 +179,7 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	//Create response and marshal to json
+	//Read file and marshal data in JSON for response
 	file, err := ioutil.ReadFile(requestFile.Path + requestFile.FileName)
 	if err != nil {
 		panic(err)
