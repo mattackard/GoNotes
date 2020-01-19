@@ -1,13 +1,17 @@
 
 GoNotes Commands
 
-create [flags] [filename] [text]
+create [flags] [filename] [text]    -- creates a new file with the extension defined in the 
+                                    config.json file
+
     -open   to open newly created file in editor
+    -date   adds a date in the header of the new file
 
-edit [filename]
 
-delete [filename]
+edit [filename]     -- opens a file in nano for editing
 
-config
+delete [filename]   -- deletes the file passed in
 
-list
+config              -- opens config.json in nano for editing
+
+list                -- prints out a list of files in the current directory

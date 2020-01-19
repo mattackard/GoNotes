@@ -46,6 +46,7 @@ var Open *bool
 //DateStamp is a flag to initialize new note files with the current date as a header
 var DateStamp *bool
 
+//initializes the global variables having to do with configuration of the program
 func init() {
 
 	Default = Config{
@@ -69,15 +70,17 @@ func init() {
 	}
 
 	//get flags and args from the original terminal call
-	Open = flag.Bool("open", false, "open file for editing after creating")
-	DateStamp = flag.Bool("date", false, "Initializes new note files with the current date")
-	flag.Parse()
-	os.Args = flag.Args()
+	Open = flag.Bool("open", Mycfg.Options.InitEditor, "open file for editing after creating")
+	DateStamp = flag.Bool("date", Mycfg.Options.DateStamp, "Initializes new note files with the current date")
+	if len(os.Args) > 2 {
+		flag.CommandLine.Parse(os.Args[2:])
+		os.Args = flag.Args()
+	}
 
 	//sets a variable to the full file path passed in through args
 	//if the command takes a filepath
 	if len(os.Args) > 1 {
-		FullPath = Mycfg.Paths.Notes + os.Args[1] + Mycfg.Options.FileExtension
+		FullPath = Mycfg.Paths.Notes + os.Args[0] + Mycfg.Options.FileExtension
 	}
 }
 

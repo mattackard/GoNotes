@@ -10,11 +10,12 @@ import (
 )
 
 func TestCreateFile(t *testing.T) {
-	os.Args = []string{"", "File", "Text"}
+	os.Args = []string{"File", "Text"}
 
 	//Create a test file
-	editFile := false
-	CreateFile(config.Mycfg.Paths.Notes, "testing.txt", &editFile)
+	*config.Open = false
+	*config.DateStamp = false
+	CreateFile(config.Mycfg.Paths.Notes, "testing.txt")
 
 	//Check test file has been created
 	_, err := os.Open("testing.txt")
@@ -37,8 +38,9 @@ func TestCreateFile(t *testing.T) {
 }
 
 func ExampleCreateFile() {
-	editFile := false
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", &editFile)
+	*config.Open = false
+	*config.DateStamp = false
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
 	file, _ := os.Open("TestFile.txt")
 	fmt.Println(file != nil)
 	//Output: true
@@ -48,9 +50,10 @@ func ExampleCreateFile() {
 }
 
 func TestPrint(t *testing.T) {
-	editFile := false
-	os.Args = []string{"", "File", "Text"}
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", &editFile)
+	*config.Open = false
+	*config.DateStamp = false
+	os.Args = []string{"File", "Text"}
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
 	text := Print("TestFile.txt")
 	if text != "Text" {
 		t.Errorf("File's contents '%s' do not match text given '%s'", text, "Text")
@@ -61,9 +64,10 @@ func TestPrint(t *testing.T) {
 }
 
 func ExamplePrint() {
-	editFile := false
-	os.Args = []string{"", "File", "Text"}
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", &editFile)
+	*config.Open = false
+	*config.DateStamp = false
+	os.Args = []string{"File", "Text"}
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
 	text := Print("TestFile.txt")
 	fmt.Println(text == "Text")
 	//Output: true
@@ -73,8 +77,9 @@ func ExamplePrint() {
 }
 
 func TestDelete(t *testing.T) {
-	editFile := false
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", &editFile)
+	*config.Open = false
+	*config.DateStamp = false
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
 	Delete("TestFile.txt")
 	file, _ := os.Open("TestFile.txt")
 	if file != nil {
@@ -85,8 +90,9 @@ func TestDelete(t *testing.T) {
 }
 
 func ExampleDelete() {
-	editFile := false
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", &editFile)
+	*config.Open = false
+	*config.DateStamp = false
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
 	Delete("TestFile.txt")
 	_, err := os.Open("TestFile.txt")
 	fmt.Println(err != nil)

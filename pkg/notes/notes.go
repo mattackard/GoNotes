@@ -6,10 +6,13 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"time"
+
+	"github.com/mattackard/project-0/pkg/config"
 )
 
 //CreateFile creates a text file in directory defined in the user config
-func CreateFile(path string, filePath string, open *bool) {
+func CreateFile(path string, filePath string) {
 	os.MkdirAll(path, 0777)
 
 	//create the note file using the extension and path from config
@@ -18,10 +21,18 @@ func CreateFile(path string, filePath string, open *bool) {
 		panic(err)
 	}
 
-	f.WriteString(os.Args[2])
+	//adds a date header to the file if the date flag is set
+	if *config.DateStamp {
+		//get current date and format it
+		currentTime := time.Now()
+		prettyTime := currentTime.Format("Mon January _2, 2006")
+		f.WriteString(prettyTime + ",\n\n" + os.Args[1])
+	} else {
+		f.WriteString(os.Args[1])
+	}
 
 	//opens the file in the editor if open flag is set
-	if *open {
+	if *config.Open {
 		Edit(filePath)
 	}
 }
