@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"flag"
 	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -98,7 +97,7 @@ func LoadConfig() (cfg Config) {
 			jsonFile = createNewConfig()
 		//if any other error, log it
 		default:
-			log.Fatal(err)
+			panic(err)
 		}
 	}
 	bytes, err := ioutil.ReadAll(jsonFile)
@@ -112,12 +111,12 @@ func createNewConfig() *os.File {
 	file, err := json.MarshalIndent(Default, "", "    ")
 	err = ioutil.WriteFile("config.json", file, 0777)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	//load config once it as been created
 	config, err := os.Open("config.json")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	return config
 }

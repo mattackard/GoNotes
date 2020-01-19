@@ -4,7 +4,6 @@ package notes
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 )
@@ -16,7 +15,7 @@ func CreateFile(path string, filePath string, open *bool) {
 	//create the note file using the extension and path from config
 	f, err := os.Create(filePath)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	f.WriteString(os.Args[2])
@@ -38,7 +37,7 @@ func Print(fileName string) string {
 	//reads the file and stores as a byte[] in note
 	note, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	//casts the byte[] to string for printing
@@ -59,7 +58,7 @@ func Edit(fileName string) {
 	//Open file in nano
 	err := cmd.Run()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }
 
@@ -74,7 +73,7 @@ func Update(path string, fileName string, text string) {
 	os.MkdirAll(path, 0777)
 	err := ioutil.WriteFile(fileName, []byte(text), 0777)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }
 
