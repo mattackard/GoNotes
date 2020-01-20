@@ -20,11 +20,20 @@ let workingDir = "./";
 //removes the file path in front of filename
 let parseTitle = path => {
   let pathArr = path.split("/");
-  return pathArr[pathArr.length - 1];
+  let title = pathArr[pathArr.length - 1];
+  title = title.split(".");
+  if (title[1] == "txt") {
+    return title[0];
+  } else {
+    return pathArr[pathArr.length - 1];
+  }
 };
 
 newNote.addEventListener("click", e => {
   e.preventDefault();
+  //clear the file broswer list and hide it behind other content again
+  files.innerHTML = "";
+  fileBrowser.style.zIndex = -1;
   fetch("http://localhost:5555/newNote").then(response => {
     //reset note title input value and put it into the html
     noteTitle.innerText = "";
@@ -43,6 +52,8 @@ openNote.addEventListener("click", e => {
 
   //clears note editor text
   noteEditor.value = "";
+  titleInput.remove();
+  noteTitle.innerText = "Open File";
 
   fetchDir(workingDir);
 });
@@ -125,6 +136,10 @@ files.addEventListener("click", e => {
 });
 
 deleteNote.addEventListener("click", e => {
+  //clear the file broswer list and hide it behind other content again
+  files.innerHTML = "";
+  fileBrowser.style.zIndex = -1;
+
   e.preventDefault();
   //send filename to delete file
   fetch("http://localhost:5555/deleteNote", {
@@ -146,6 +161,10 @@ deleteNote.addEventListener("click", e => {
 
 saveNote.addEventListener("click", e => {
   e.preventDefault();
+
+  //clear the file broswer list and hide it behind other content again
+  files.innerHTML = "";
+  fileBrowser.style.zIndex = -1;
 
   //if the title field is an input, get the value
   //otherwise get the value of the title field
@@ -173,6 +192,10 @@ saveNote.addEventListener("click", e => {
 
 //get the config file put it's contents into the editor
 settings.addEventListener("click", e => {
+  //clear the file broswer list and hide it behind other content again
+  files.innerHTML = "";
+  fileBrowser.style.zIndex = -1;
+
   e.preventDefault();
   fetch("http://localhost:5555/settings").then(response => {
     response.json().then(json => {

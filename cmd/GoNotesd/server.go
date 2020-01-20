@@ -76,7 +76,12 @@ func deleteNote(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(delBody, &requestNote)
 
 	//delete the file
-	filePath := requestNote.Path + requestNote.FileName + config.Mycfg.Options.FileExtension
+	var filePath string
+	if strings.Contains(requestNote.FileName, ".") {
+		filePath = requestNote.Path + requestNote.FileName
+	} else {
+		filePath = requestNote.Path + requestNote.FileName + config.Mycfg.Options.FileExtension
+	}
 	notes.Delete(filePath)
 
 	//send back success response
