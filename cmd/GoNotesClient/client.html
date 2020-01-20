@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <head>
-    <meta charset="utf-8">
-    <title>GoNotes</title>
-    <link rel="stylesheet" href="client.css">
+  <meta charset="utf-8" />
+  <title>GoNotes</title>
+  <link
+    rel="stylesheet"
+    href="https://raw.githack.com/mattackard/project-0/master/cmd/GoNotesClient/client.css"
+  />
 </head>
 <body>
-    <div id="main">
-        <h1>GoNotes</h1>
-        <form id="editor">
-            <ul>
-                <li><button id="newNote">New</button></li>
-                <li><button id="openNote">Open</button></li>
-                <li><button id="saveNote">Save</button></li>
-                <li id="noteTitle"></li>
-                <li><button id="deleteNote">Delete</button></li>
-                <li><button id="settings">Settings</button></li>
-            </ul>
-            <textarea id="noteEditor" spellcheck="true"></textarea>
-        </form>
-    </div>
-    <div id="fileBrowser" title="div">
-        <ul id="files" title="ul element">
-        </ul>
-    </div>
-    <script src="client.js"></script>
+  <div id="main">
+    <h1>GoNotes</h1>
+    <form id="editor">
+      <ul>
+        <li><button id="newNote">New</button></li>
+        <li><button id="openNote">Open</button></li>
+        <li><button id="saveNote">Save</button></li>
+        <li id="noteTitle"></li>
+        <li><button id="deleteNote">Delete</button></li>
+        <li><button id="settings">Settings</button></li>
+      </ul>
+      <textarea id="noteEditor" spellcheck="true"></textarea>
+    </form>
+  </div>
+  <div id="fileBrowser" title="div">
+    <ul id="files" title="ul element"></ul>
+  </div>
+  <script src="https://raw.githack.com/mattackard/project-0/master/cmd/GoNotesClient/client.js"></script>
 </body>
