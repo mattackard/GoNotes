@@ -1,4 +1,4 @@
-//GoNotes
+// GoNotes
 package main
 
 import (
@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	//determines what function to run based on the cli cmds
+	// determines what function to run based on the cli cmds
 	switch config.Cmd {
 	case "create":
 		println(config.FullPath + " <- full path")
@@ -27,7 +27,7 @@ func main() {
 	case "delete":
 		notes.Delete(config.FullPath)
 	default:
-		//prints out a help message with the possible commands if an unrecognized command is entered
+		// prints out a help message with the possible commands if an unrecognized command is entered
 		if config.Cmd == "" {
 			fmt.Printf("You must enter a command. \n")
 		} else {

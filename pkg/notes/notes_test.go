@@ -12,18 +12,18 @@ import (
 func TestCreateFile(t *testing.T) {
 	os.Args = []string{"File", "Hello", "World"}
 
-	//Create a test file
+	// Create a test file
 	*config.Open = false
 	*config.DateStamp = false
 	CreateFile(config.Mycfg.Paths.Notes, "testing.txt")
 
-	//Check test file has been created
+	// Check test file has been created
 	_, err := os.Open("testing.txt")
 	if err != nil {
 		t.Errorf("Created file could not be opened.")
 	}
 
-	//Check if text is written to file
+	// Check if text is written to file
 	text, err := ioutil.ReadFile("testing.txt")
 	if err != nil {
 		t.Errorf("Error reading file at testing.txt")
@@ -43,10 +43,10 @@ func ExampleCreateFile() {
 	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
 	file, _ := os.Open("TestFile.txt")
 	fmt.Println(file != nil)
-	//Output: true
+	// Output: true
 
-	//Delete("TestFile.txt")
-	//Delete("config.json")
+	// Delete("TestFile.txt")
+	// Delete("config.json")
 }
 
 func TestPrint(t *testing.T) {
@@ -70,10 +70,10 @@ func ExamplePrint() {
 	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
 	text := Print("TestFile.txt")
 	fmt.Println(text == "Text")
-	//Output: true
+	// Output: true
 
-	//Delete("TestFile.txt")
-	//Delete("config.json")
+	// Delete("TestFile.txt")
+	// Delete("config.json")
 }
 
 func TestDelete(t *testing.T) {
@@ -96,7 +96,7 @@ func ExampleDelete() {
 	Delete("TestFile.txt")
 	_, err := os.Open("TestFile.txt")
 	fmt.Println(err != nil)
-	//Output: true
+	// Output: true
 
-	//Delete("config.json")
+	// Delete("config.json")
 }

@@ -35,9 +35,9 @@ func TestLoadConfig(t *testing.T) {
 
 func ExampleLoadConfig() {
 	myCfg := LoadConfig()
-	println(myCfg.Paths.Notes)               // "./"
-	fmt.Println(myCfg.Options.FileExtension) // ".txt"
-	//Output: .txt
+	println(myCfg.Paths.Notes)               //  "./"
+	fmt.Println(myCfg.Options.FileExtension) //  ".txt"
+	// Output: .txt
 
-	//os.Remove("config.json")
+	// os.Remove("config.json")
 }
