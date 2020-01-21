@@ -13,10 +13,12 @@ import (
 
 //CreateFile creates a text file in directory defined in the user config
 func CreateFile(path string, filePath string) {
+	textContent := ""
 	os.MkdirAll(path, 0777)
 
 	//create the note file using the extension and path from config
 	f, err := os.Create(filePath)
+	defer f.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -26,10 +28,15 @@ func CreateFile(path string, filePath string) {
 		//get current date and format it
 		currentTime := time.Now()
 		prettyTime := currentTime.Format("Mon January _2, 2006")
-		f.WriteString(prettyTime + ",\n\n" + os.Args[1])
-	} else {
-		f.WriteString(os.Args[1])
+		textContent = prettyTime + ",\n\n"
 	}
+	if len(os.Args) > 1 {
+		for _, v := range os.Args[1:] {
+			textContent += v + " "
+		}
+	}
+
+	f.WriteString(textContent)
 
 	//opens the file in the editor if open flag is set
 	if *config.Open {

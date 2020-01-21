@@ -10,7 +10,7 @@ import (
 )
 
 func TestCreateFile(t *testing.T) {
-	os.Args = []string{"File", "Text"}
+	os.Args = []string{"File", "Hello", "World"}
 
 	//Create a test file
 	*config.Open = false
@@ -28,7 +28,7 @@ func TestCreateFile(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error reading file at testing.txt")
 	}
-	if string(text) != "Text" {
+	if string(text) != "Hello World " {
 		t.Errorf("Text in created file does not match text passed in : %s", string(text))
 	}
 
@@ -55,8 +55,8 @@ func TestPrint(t *testing.T) {
 	os.Args = []string{"File", "Text"}
 	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
 	text := Print("TestFile.txt")
-	if text != "Text" {
-		t.Errorf("File's contents '%s' do not match text given '%s'", text, "Text")
+	if text != "Text " {
+		t.Errorf("File's contents '%s' do not match text given '%s'", text, "Text ")
 	}
 
 	Delete("TestFile.txt")

@@ -1,4 +1,4 @@
-//Package config loads and structures the configuration values for GoNotes
+// Package config loads and structures the configuration values for GoNotes
 package config
 
 import (
@@ -6,6 +6,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 //Mycfg contains the configuration loaded from config.json
@@ -79,8 +80,12 @@ func init() {
 
 	//sets a variable to the full file path passed in through args
 	//if the command takes a filepath
-	if len(os.Args) > 1 {
-		FullPath = Mycfg.Paths.Notes + os.Args[0] + Mycfg.Options.FileExtension
+	if len(os.Args) > 0 {
+		if strings.Contains(os.Args[0], ".") {
+			FullPath = Mycfg.Paths.Notes + os.Args[0]
+		} else {
+			FullPath = Mycfg.Paths.Notes + os.Args[0] + Mycfg.Options.FileExtension
+		}
 	}
 }
 
