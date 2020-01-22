@@ -21,7 +21,7 @@ go get github.com/mattackard/project-0
 You can install all go dependencies using go get in the project directory
 
 ```
-go get ./...
+go get -u -v -f all
 ```
 
 The GoNotes Client uses webview which has some dependencies of its on that can be found in the webview [readme](https://github.com/zserge/webview/blob/master/README.md).
