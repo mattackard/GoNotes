@@ -41,6 +41,7 @@ newNote.addEventListener("click", e => {
 
     //parse JSON response into title and editor fields
     response.json().then(json => {
+      workingDir = json.path;
       titleInput.value = "";
       noteEditor.value = json.text;
     });

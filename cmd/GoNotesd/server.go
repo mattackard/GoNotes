@@ -54,6 +54,7 @@ func newNote(w http.ResponseWriter, r *http.Request) {
 
 	// add date to top of file and add some newlines for formatting
 	response := note{
+		Path:     config.Mycfg.Paths.Notes,
 		FileName: "",
 		Text:     prettyTime + ", \n\n",
 	}
