@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -53,6 +54,7 @@ func newNote(w http.ResponseWriter, r *http.Request) {
 	prettyTime := currentTime.Format("Mon January _2, 2006")
 
 	// add date to top of file and add some newlines for formatting
+	os.MkdirAll(config.Mycfg.Paths.Notes, 0777)
 	response := note{
 		Path:     config.Mycfg.Paths.Notes,
 		FileName: "",

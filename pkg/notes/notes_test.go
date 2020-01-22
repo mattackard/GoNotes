@@ -13,9 +13,7 @@ func TestCreateFile(t *testing.T) {
 	os.Args = []string{"File", "Hello", "World"}
 
 	// Create a test file
-	*config.Open = false
-	*config.DateStamp = false
-	CreateFile(config.Mycfg.Paths.Notes, "testing.txt")
+	CreateFile(config.Mycfg.Paths.Notes, "testing.txt", false, false)
 
 	// Check test file has been created
 	_, err := os.Open("testing.txt")
@@ -38,9 +36,7 @@ func TestCreateFile(t *testing.T) {
 }
 
 func ExampleCreateFile() {
-	*config.Open = false
-	*config.DateStamp = false
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", false, false)
 	file, _ := os.Open("TestFile.txt")
 	fmt.Println(file != nil)
 	// Output: true
@@ -50,10 +46,8 @@ func ExampleCreateFile() {
 }
 
 func TestPrint(t *testing.T) {
-	*config.Open = false
-	*config.DateStamp = false
 	os.Args = []string{"File", "Text"}
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", false, false)
 	text := Print("TestFile.txt")
 	if text != "Text " {
 		t.Errorf("File's contents '%s' do not match text given '%s'", text, "Text ")
@@ -64,10 +58,8 @@ func TestPrint(t *testing.T) {
 }
 
 func ExamplePrint() {
-	*config.Open = false
-	*config.DateStamp = false
 	os.Args = []string{"File", "Text"}
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", false, false)
 	text := Print("TestFile.txt")
 	fmt.Println(text == "Text")
 	// Output: true
@@ -77,9 +69,7 @@ func ExamplePrint() {
 }
 
 func TestDelete(t *testing.T) {
-	*config.Open = false
-	*config.DateStamp = false
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", false, false)
 	Delete("TestFile.txt")
 	file, _ := os.Open("TestFile.txt")
 	if file != nil {
@@ -90,9 +80,7 @@ func TestDelete(t *testing.T) {
 }
 
 func ExampleDelete() {
-	*config.Open = false
-	*config.DateStamp = false
-	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt")
+	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", false, false)
 	Delete("TestFile.txt")
 	_, err := os.Open("TestFile.txt")
 	fmt.Println(err != nil)

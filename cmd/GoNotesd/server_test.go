@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/mattackard/project-0/pkg/config"
 )
 
 func TestSetHeaders(t *testing.T) {
@@ -39,8 +41,8 @@ func TestNewNote(t *testing.T) {
 	if testBody.FileName != "" {
 		t.Errorf("Response filename is (%s), expecting blank string", testBody.FileName)
 	}
-	if testBody.Path != "" {
-		t.Errorf("Response path is (%s), expecting blank string", testBody.Path)
+	if testBody.Path != config.Mycfg.Paths.Notes {
+		t.Errorf("Response path is (%s), expecting (%s)", testBody.Path, config.Mycfg.Paths.Notes)
 	}
 	if testBody.Text == "" {
 		t.Error("Response text is blank")
