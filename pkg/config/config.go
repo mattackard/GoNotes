@@ -3,10 +3,8 @@ package config
 
 import (
 	"encoding/json"
-	"flag"
 	"io/ioutil"
 	"os"
-	"strings"
 )
 
 // Mycfg contains the configuration loaded from config.json
@@ -35,17 +33,8 @@ type Option struct {
 	Port          string `json:"port"`
 }
 
-// Cmd stores the command from os.Args to execute via command line
-var Cmd string
-
 // FullPath holds the path including directory to use when referencing note files
-var FullPath string
-
-// Open is a flag for opening a note for editing immediately after creation
-var Open *bool
-
-// DateStamp is a flag to initialize new note files with the current date as a header
-var DateStamp *bool
+// var FullPath string
 
 // initializes the global variables having to do with configuration of the program
 func init() {
@@ -62,31 +51,6 @@ func init() {
 		},
 	}
 	Mycfg = LoadConfig()
-
-	// Retrieves the cli cmd passed
-	if len(os.Args) < 2 {
-		Cmd = ""
-	} else {
-		Cmd = os.Args[1]
-	}
-
-	// get flags and args from the original terminal call
-	Open = flag.Bool("open", Mycfg.Options.InitEditor, "open file for editing after creating")
-	DateStamp = flag.Bool("date", Mycfg.Options.DateStamp, "Initializes new note files with the current date")
-	if len(os.Args) > 2 {
-		flag.CommandLine.Parse(os.Args[2:])
-		os.Args = flag.Args()
-	}
-
-	// sets a variable to the full file path passed in through args
-	// if the command takes a filepath
-	if len(os.Args) > 0 {
-		if strings.Contains(os.Args[0], ".") {
-			FullPath = Mycfg.Paths.Notes + os.Args[0]
-		} else {
-			FullPath = Mycfg.Paths.Notes + os.Args[0] + Mycfg.Options.FileExtension
-		}
-	}
 }
 
 // LoadConfig loads the ./config.json and parses it into the Config struct

@@ -7,12 +7,10 @@ import (
 	"os"
 	"os/exec"
 	"time"
-
-	"github.com/mattackard/project-0/pkg/config"
 )
 
 // CreateFile creates a text file in directory defined in the user config
-func CreateFile(path string, filePath string) {
+func CreateFile(path string, filePath string, open bool, date bool) {
 	textContent := ""
 	os.MkdirAll(path, 0777)
 
@@ -24,7 +22,7 @@ func CreateFile(path string, filePath string) {
 	}
 
 	// adds a date header to the file if the date flag is set
-	if *config.DateStamp {
+	if date {
 		// get current date and format it
 		currentTime := time.Now()
 		prettyTime := currentTime.Format("Mon January _2, 2006")
@@ -39,7 +37,7 @@ func CreateFile(path string, filePath string) {
 	f.WriteString(textContent)
 
 	// opens the file in the editor if open flag is set
-	if *config.Open {
+	if open {
 		Edit(filePath)
 	}
 }
