@@ -8,6 +8,7 @@ let noteEditor = document.getElementById("noteEditor");
 let noteTitle = document.getElementById("noteTitle");
 let files = document.getElementById("files");
 let fileBrowser = document.getElementById("fileBrowser");
+let connectionStatus = document.getElementById("connectionStatus");
 
 //create input element for new file titles
 let titleInput = document.createElement("INPUT");
@@ -16,6 +17,19 @@ titleInput.placeholder = "Enter title";
 
 //initiailize working directory to project directory
 let workingDir = "./";
+
+//checks the connection status to server when content is all loaded
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("http://localhost:5555/connect").then(response => {
+    if (response.status == 200) {
+      connectionStatus.innerText = "Online";
+      connectionStatus.style.color = "green";
+    } else {
+      connectionStatus.innerText = "Offline";
+      connectionStatus.style.color = "red";
+    }
+  });
+});
 
 //removes the file path in front of filename
 let parseTitle = path => {

@@ -27,6 +27,7 @@ type directory struct {
 
 func main() {
 	// set up server endpoints
+	http.HandleFunc("/connect", connect)
 	http.HandleFunc("/newNote", newNote)
 	http.HandleFunc("/dir", noteDir)
 	http.HandleFunc("/getFile", getFile)
@@ -45,6 +46,19 @@ func setHeaders(w http.ResponseWriter) http.ResponseWriter {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
 	return w
+}
+
+//return the status of the connection from the client
+func connect(w http.ResponseWriter, r *http.Request) {
+	method := r.Method
+	url := r.URL
+	httpVer := r.Proto
+	host := r.Host
+	closeConn := r.Close
+	address := r.RemoteAddr
+	fmt.Println(method, url, httpVer, host, closeConn, address)
+	w = setHeaders(w)
+	w.Write([]byte("OK"))
 }
 
 // create a new note with datestamp and returns it as http response
@@ -73,6 +87,7 @@ func deleteNote(w http.ResponseWriter, r *http.Request) {
 	// read the request to get the filename to delete
 	var requestNote note
 	delBody, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -96,6 +111,7 @@ func saveNote(w http.ResponseWriter, r *http.Request) {
 	// parse request to get files name and text content to save
 	var requestNote note
 	save, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -151,6 +167,7 @@ func noteDir(w http.ResponseWriter, r *http.Request) {
 	// Unmarshal post body to get requested directory
 	var newDir directory
 	save, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -179,6 +196,7 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 	// Unmarshal post body to get filename
 	var requestFile note
 	save, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		panic(err)
 	}
