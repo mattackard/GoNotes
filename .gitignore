@@ -3,8 +3,5 @@
 #except for the help file
 !help.txt 
 
-# builds created by go
-main
-
-#config files -- are ok for now
-#*.ini
+# binaries created by go
+/bin
