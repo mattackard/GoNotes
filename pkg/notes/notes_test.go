@@ -16,7 +16,8 @@ func TestCreateFile(t *testing.T) {
 	CreateFile(config.Mycfg.Paths.Notes, "testing.txt", false, false)
 
 	// Check test file has been created
-	_, err := os.Open("testing.txt")
+	test, err := os.Open("testing.txt")
+	defer test.Close()
 	if err != nil {
 		t.Errorf("Created file could not be opened.")
 	}
@@ -38,6 +39,7 @@ func TestCreateFile(t *testing.T) {
 func ExampleCreateFile() {
 	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", false, false)
 	file, _ := os.Open("TestFile.txt")
+	defer file.Close()
 	fmt.Println(file != nil)
 	// Output: true
 
@@ -72,6 +74,7 @@ func TestDelete(t *testing.T) {
 	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", false, false)
 	Delete("TestFile.txt")
 	file, _ := os.Open("TestFile.txt")
+	defer file.Close()
 	if file != nil {
 		t.Errorf("The test file could not be deleted")
 	}
@@ -82,7 +85,8 @@ func TestDelete(t *testing.T) {
 func ExampleDelete() {
 	CreateFile(config.Mycfg.Paths.Notes, "TestFile.txt", false, false)
 	Delete("TestFile.txt")
-	_, err := os.Open("TestFile.txt")
+	test, err := os.Open("TestFile.txt")
+	defer test.Close()
 	fmt.Println(err != nil)
 	// Output: true
 

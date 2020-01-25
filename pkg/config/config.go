@@ -57,7 +57,6 @@ func init() {
 func LoadConfig() (cfg Config) {
 	// attempt to load the config file
 	jsonFile, err := os.Open("./config.json")
-	defer jsonFile.Close()
 
 	// config error handling
 	if err != nil {
@@ -81,7 +80,7 @@ func LoadConfig() (cfg Config) {
 func createNewConfig() *os.File {
 	os.Create("./config.json")
 	file, err := json.MarshalIndent(Default, "", "    ")
-	err = ioutil.WriteFile("config.json", file, 0777)
+	err = ioutil.WriteFile("config.json", file, 0666)
 	if err != nil {
 		panic(err)
 	}
