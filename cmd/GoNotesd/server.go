@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"strings"
 	"time"
@@ -37,7 +39,7 @@ func main() {
 
 	// start server on the port specified in the config file
 	fmt.Println("Server is running at localhost", config.Mycfg.Options.Port)
-	http.ListenAndServe(config.Mycfg.Options.Port, nil)
+	log.Println(http.ListenAndServe(config.Mycfg.Options.Port, nil))
 }
 
 // set header to expect json and allow cors
