@@ -12,9 +12,6 @@ import (
 	"strings"
 	"time"
 
-	//loads env variables from .env
-	"github.com/joho/godotenv"
-
 	"github.com/mattackard/project-0/pkg/config"
 	"github.com/mattackard/project-0/pkg/notes"
 )
@@ -32,10 +29,6 @@ type directory struct {
 }
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalln(err, "Error loading .env file")
-	}
 
 	// set up server endpoints
 	http.HandleFunc("/connect", connect)
@@ -67,7 +60,6 @@ func authorizeRequest(w http.ResponseWriter, r *http.Request) bool {
 
 	//if auth doesn't match, reject request
 	if auth != encode {
-		log.Printf("auth: %s, encode: %s", auth, encode)
 		w.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprintln(w, "Invalid Authorization")
 		return false
