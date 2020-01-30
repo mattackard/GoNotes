@@ -18,9 +18,12 @@ titleInput.placeholder = "Enter title";
 //initiailize working directory to project directory
 let workingDir = "./";
 
+//http address for the file server
+let serverAddr = "http://localhost:6060";
+
 //checks the connection status to server when content is all loaded
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("http://localhost:5555/connect").then(response => {
+  fetch(`${serverAddr}/connect`).then(response => {
     if (response.status == 200) {
       connectionStatus.innerText = "Online";
       connectionStatus.style.color = "green";
@@ -48,7 +51,7 @@ newNote.addEventListener("click", e => {
   //clear the file broswer list and hide it behind other content again
   files.innerHTML = "";
   fileBrowser.style.zIndex = -1;
-  fetch("http://localhost:5555/newNote").then(response => {
+  fetch(`${serverAddr}/newNote`).then(response => {
     //reset note title input value and put it into the html
     noteTitle.innerText = "";
     noteTitle.insertAdjacentElement("afterbegin", titleInput);
@@ -74,7 +77,7 @@ openNote.addEventListener("click", e => {
 });
 
 let fetchDir = dir => {
-  fetch("http://localhost:5555/dir", {
+  fetch(`${serverAddr}/dir`, {
     method: "POST",
     header: {
       "Content-Type": "text/plain"
@@ -126,7 +129,7 @@ files.addEventListener("click", e => {
     workingDir += e.target.title;
     fetchDir(workingDir);
   } else {
-    fetch("http://localhost:5555/getFile", {
+    fetch(`${serverAddr}/getFile`, {
       method: "POST",
       header: {
         "Content-Type": "text/plain"
@@ -157,7 +160,7 @@ deleteNote.addEventListener("click", e => {
 
   e.preventDefault();
   //send filename to delete file
-  fetch("http://localhost:5555/deleteNote", {
+  fetch(`${serverAddr}/deleteNote`, {
     method: "POST",
     header: {
       "Content-Type": "text/plain"
@@ -194,7 +197,7 @@ saveNote.addEventListener("click", e => {
   titleInput.value = "";
   titleInput.remove();
   noteTitle.innerText = newTitle;
-  fetch("http://localhost:5555/saveNote", {
+  fetch(`${serverAddr}/saveNote`, {
     method: "POST",
     headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({
@@ -212,7 +215,7 @@ settings.addEventListener("click", e => {
   fileBrowser.style.zIndex = -1;
 
   e.preventDefault();
-  fetch("http://localhost:5555/settings").then(response => {
+  fetch(`${serverAddr}/settings`).then(response => {
     response.json().then(json => {
       noteTitle.innerText = parseTitle(json.fileName);
       noteEditor.value = json.text;
