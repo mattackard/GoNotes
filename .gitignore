@@ -5,3 +5,6 @@
 
 # binaries created by go
 /bin
+
+#environment variables
+.env
