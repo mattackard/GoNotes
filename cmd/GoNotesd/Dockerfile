@@ -11,4 +11,5 @@ RUN go build -o GoNotesd ./server.go
 
 FROM alpine:latest AS production
 COPY --from=builder /app .
+EXPOSE 5555
 CMD [ "./GoNotesd" ]

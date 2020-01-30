@@ -38,7 +38,7 @@ func main() {
 	http.HandleFunc("/settings", settings)
 
 	// start server on the port specified in the config file
-	fmt.Println("Server is running at localhost", config.Mycfg.Options.Port)
+	fmt.Println("Server is running at http://server", config.Mycfg.Options.Port)
 	log.Println(http.ListenAndServe(config.Mycfg.Options.Port, nil))
 }
 

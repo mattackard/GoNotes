@@ -22,7 +22,17 @@ let workingDir = "./";
 let serverAddr = "http://localhost:6060";
 
 //checks the connection status to server when content is all loaded
+//continues to check every second until a connection is successful
 document.addEventListener("DOMContentLoaded", () => {
+  let ping = setInterval(() => {
+    checkConnection();
+    if (connectionStatus.innerText == "Online") {
+      clearInterval(ping)
+    }
+  }, 1000);
+});
+
+let checkConnection = () => {
   fetch(`${serverAddr}/connect`).then(response => {
     if (response.status == 200) {
       connectionStatus.innerText = "Online";
@@ -32,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       connectionStatus.style.color = "red";
     }
   });
-});
+}
 
 //removes the file path in front of filename
 let parseTitle = path => {

@@ -138,7 +138,8 @@ func TestNoteDir(t *testing.T) {
 	if testDir.Root != "./" {
 		t.Errorf("Response root is (%s), expected (./)", testDir.Root)
 	}
-	if len(testDir.Files) != 3 {
+	//GoNotesd directory is expected to have: Dockerfile, server_test.go, server.go, generated config.json
+	if len(testDir.Files) != 4 {
 		t.Error("Test directory is not expected length")
 	}
 }
