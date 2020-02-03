@@ -62,7 +62,7 @@ func main() {
 	// start server on the port specified in the config file
 	myIP := dnsutil.Ping("dns:6060", "noteserver")
 	noPort := dnsutil.TrimPort(myIP)
-	logutil.SendLog("logger:6060", false, []string{"NoteServer started at " + noPort + ":" + config.Mycfg.Options.Port}, logFile, "NoteServer")
+	logutil.SendLog("logger:6060", false, []string{"NoteServer started at " + noPort + config.Mycfg.Options.Port}, logFile, "NoteServer")
 	log.Println(http.ListenAndServe(config.Mycfg.Options.Port, nil))
 }
 
