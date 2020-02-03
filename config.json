@@ -6,6 +6,6 @@
         "dateStamp": true,
         "initEditor": false,
         "fileExtension": ".txt",
-        "port": ":5555"
+        "port": ":6060"
     }
 }

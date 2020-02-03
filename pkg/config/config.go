@@ -47,7 +47,7 @@ func init() {
 			DateStamp:     true,
 			InitEditor:    false,
 			FileExtension: ".txt",
-			Port:          ":5555",
+			Port:          ":6060",
 		},
 	}
 	Mycfg = LoadConfig()
