@@ -97,21 +97,6 @@ func authorizeRequest(next http.Handler) http.Handler {
 	})
 }
 
-//checks if the request has the proper auth token in its header
-// func authorizeRequest(w http.ResponseWriter, r *http.Request) bool {
-// 	auth := r.Header.Get("Proxy-Authorization")
-// 	encode := base64.StdEncoding.EncodeToString([]byte(os.Getenv("PROXYAUTH")))
-// 	encode = "Basic " + encode
-
-// 	//if auth doesn't match, reject request
-// 	if auth != encode {
-// 		w.WriteHeader(http.StatusUnauthorized)
-// 		fmt.Fprintln(w, "Invalid Authorization")
-// 		return false
-// 	}
-// 	return true
-// }
-
 //return the status of the connection from the client
 func connect(w http.ResponseWriter, r *http.Request) {
 	method := r.Method
