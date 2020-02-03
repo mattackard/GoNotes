@@ -60,8 +60,9 @@ func main() {
 	http.Handle("/settings", authorizeRequest(sendToLogger(settingsHanlder)))
 
 	// start server on the port specified in the config file
-	myIP := dnsutil.Ping("dns:6060", "NoteServer")
-	logutil.SendLog("logger:6060", false, []string{"NoteServer started at " + myIP.String()}, logFile, "NoteServer")
+	myIP := dnsutil.Ping("dns:6060", "noteserver")
+	noPort := dnsutil.TrimPort(myIP)
+	logutil.SendLog("logger:6060", false, []string{"NoteServer started at " + noPort + ":" + config.Mycfg.Options.Port}, logFile, "NoteServer")
 	log.Println(http.ListenAndServe(config.Mycfg.Options.Port, nil))
 }
 
@@ -99,16 +100,8 @@ func authorizeRequest(next http.Handler) http.Handler {
 
 //return the status of the connection from the client
 func connect(w http.ResponseWriter, r *http.Request) {
-	method := r.Method
-	url := r.URL
-	httpVer := r.Proto
-	host := r.Host
-	closeConn := r.Close
-	address := r.RemoteAddr
-	fmt.Println(method, url, httpVer, host, closeConn, address)
 	w = setHeaders(w)
 	w.Write([]byte("OK"))
-
 }
 
 // create a new note with datestamp and returns it as http response
@@ -127,12 +120,11 @@ func newNote(w http.ResponseWriter, r *http.Request) {
 	}
 	js, err := json.Marshal(response)
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 
 	w = setHeaders(w)
 	w.Write(js)
-
 }
 
 func deleteNote(w http.ResponseWriter, r *http.Request) {
@@ -158,7 +150,6 @@ func deleteNote(w http.ResponseWriter, r *http.Request) {
 	// send back success response
 	w = setHeaders(w)
 	w.Write([]byte("OK"))
-
 }
 
 func saveNote(w http.ResponseWriter, r *http.Request) {
@@ -168,11 +159,11 @@ func saveNote(w http.ResponseWriter, r *http.Request) {
 	save, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 	json.Unmarshal(save, &requestNote)
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 
 	// If a file extension is entered, use it. Otherwise use the extension from config
@@ -194,7 +185,6 @@ func saveNote(w http.ResponseWriter, r *http.Request) {
 
 	w = setHeaders(w)
 	w.Write([]byte("OK"))
-
 }
 
 // sends the config file back to the client
@@ -203,7 +193,7 @@ func settings(w http.ResponseWriter, r *http.Request) {
 	// load config.json and marshal into JSON
 	file, err := ioutil.ReadFile("config.json")
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 	response := note{
 		Path:     "./",
@@ -212,12 +202,11 @@ func settings(w http.ResponseWriter, r *http.Request) {
 	}
 	js, err := json.Marshal(response)
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 
 	w = setHeaders(w)
 	w.Write(js)
-
 }
 
 // gets all items in the requested directory
@@ -228,11 +217,11 @@ func noteDir(w http.ResponseWriter, r *http.Request) {
 	save, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 	json.Unmarshal(save, &newDir)
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 
 	// get the list of files in the requested directory and send in response
@@ -243,12 +232,11 @@ func noteDir(w http.ResponseWriter, r *http.Request) {
 	}
 	js, err := json.Marshal(d)
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 
 	w = setHeaders(w)
 	w.Write(js)
-
 }
 
 // gets the text content of a single file and returns it in response
@@ -259,17 +247,17 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 	save, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 	json.Unmarshal(save, &requestFile)
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 
 	// Read file and marshal data in JSON for response
 	file, err := ioutil.ReadFile(requestFile.Path + requestFile.FileName)
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 	response := note{
 		Path:     requestFile.Path,
@@ -278,10 +266,9 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 	}
 	js, err := json.Marshal(response)
 	if err != nil {
-		log.Fatalln(err)
+		logutil.SendLog("logger:6060", true, []string{err.Error()}, logFile, "NoteServer")
 	}
 
 	w = setHeaders(w)
 	w.Write(js)
-
 }
