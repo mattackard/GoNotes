@@ -1,6 +1,6 @@
 {
     "paths": {
-        "notes": "./"
+        "notes": "./notes/"
     },
     "options": {
         "dateStamp": true,

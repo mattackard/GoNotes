@@ -41,7 +41,7 @@ func init() {
 
 	Default = Config{
 		Paths: Path{
-			Notes: "./",
+			Notes: "./notes/",
 		},
 		Options: Option{
 			DateStamp:     true,
