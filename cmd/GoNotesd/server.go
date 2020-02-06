@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
 	"os"
 	"strings"
 	"time"
@@ -16,6 +15,7 @@ import (
 	"github.com/mattackard/project-0/pkg/notes"
 	"github.com/mattackard/project-1/pkg/dnsutil"
 	"github.com/mattackard/project-1/pkg/logutil"
+	"github.com/mattackard/project-1/pkg/perfutil"
 )
 
 //Note holds file information for files used in the editor
@@ -64,12 +64,15 @@ func main() {
 	settingsHanlder := http.HandlerFunc(settings)
 	http.Handle("/settings", authorizeRequest(sendToLogger(settingsHanlder)))
 
+	//handler for sending performance stats
+	http.HandleFunc("/getStats", perfutil.SendStatsHTTP)
+
 	//register server with the dns server
 	myIP := dnsutil.Ping(dnsAddr, "noteserver")
 	noPort := dnsutil.TrimPort(myIP)
 
 	//setup the logger and send an initialization log for server
-	logAddr = strings.Split(dnsutil.GetServiceIP(dnsAddr, "logger"), "=")[1]
+	logAddr = dnsutil.GetServiceIP(dnsAddr, "logger")
 	logutil.SendLog(logAddr, false, []string{"Note Server started at " + noPort + config.Mycfg.Options.Port}, logFile, "NoteServer")
 
 	//start server on the port specified in the config file
@@ -130,9 +133,7 @@ func newNote(w http.ResponseWriter, r *http.Request) {
 		Text:     prettyTime + ", \n\n",
 	}
 	js, err := json.Marshal(response)
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+	genericErrHandler(err)
 
 	w = setHeaders(w)
 	w.Write(js)
@@ -143,10 +144,9 @@ func deleteNote(w http.ResponseWriter, r *http.Request) {
 	//read the request to get the filename to delete
 	var requestNote note
 	delBody, err := ioutil.ReadAll(r.Body)
+	genericErrHandler(err)
 	defer r.Body.Close()
-	if err != nil {
-		log.Fatalln(err)
-	}
+
 	json.Unmarshal(delBody, &requestNote)
 
 	//delete the file
@@ -169,14 +169,11 @@ func saveNote(w http.ResponseWriter, r *http.Request) {
 	//parse request to get files name and text content to save
 	var requestNote note
 	save, err := ioutil.ReadAll(r.Body)
+	genericErrHandler(err)
 	defer r.Body.Close()
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+
 	json.Unmarshal(save, &requestNote)
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+	genericErrHandler(err)
 
 	//If a file extension is entered, use it. Otherwise use the extension from config
 	//Keeps the config.json file in the project root
@@ -204,18 +201,15 @@ func settings(w http.ResponseWriter, r *http.Request) {
 
 	//load config.json and marshal into JSON
 	file, err := ioutil.ReadFile("config.json")
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+	genericErrHandler(err)
+
 	response := note{
 		Path:     "./",
 		FileName: "config.json",
 		Text:     string(file),
 	}
 	js, err := json.Marshal(response)
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+	genericErrHandler(err)
 
 	w = setHeaders(w)
 	w.Write(js)
@@ -227,14 +221,11 @@ func noteDir(w http.ResponseWriter, r *http.Request) {
 	//Unmarshal post body to get requested directory
 	var newDir directory
 	save, err := ioutil.ReadAll(r.Body)
+	genericErrHandler(err)
 	defer r.Body.Close()
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+
 	json.Unmarshal(save, &newDir)
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+	genericErrHandler(err)
 
 	//get the list of files in the requested directory and send in response
 	files := notes.List(newDir.Root)
@@ -243,9 +234,7 @@ func noteDir(w http.ResponseWriter, r *http.Request) {
 		Files: files,
 	}
 	js, err := json.Marshal(d)
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+	genericErrHandler(err)
 
 	w = setHeaders(w)
 	w.Write(js)
@@ -257,30 +246,30 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 	//Unmarshal post body to get filename
 	var requestFile note
 	save, err := ioutil.ReadAll(r.Body)
+	genericErrHandler(err)
 	defer r.Body.Close()
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+
 	json.Unmarshal(save, &requestFile)
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+	genericErrHandler(err)
 
 	//Read file and marshal data in JSON for response
 	file, err := ioutil.ReadFile(requestFile.Path + requestFile.FileName)
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+	genericErrHandler(err)
+
 	response := note{
 		Path:     requestFile.Path,
 		FileName: requestFile.FileName,
 		Text:     string(file),
 	}
 	js, err := json.Marshal(response)
-	if err != nil {
-		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
-	}
+	genericErrHandler(err)
 
 	w = setHeaders(w)
 	w.Write(js)
+}
+
+func genericErrHandler(err error) {
+	if err != nil {
+		logutil.SendLog(logAddr, true, []string{err.Error()}, logFile, "NoteServer")
+	}
 }
