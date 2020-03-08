@@ -1,6 +1,5 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/mattackard/project-0?style=flat-square)](https://goreportcard.com/report/github.com/mattackard/project-0)
 [![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](http://godoc.org/github.com/mattackard/project-0)
-[![Release](https://img.shields.io/github/release/golang-standards/project-layout.svg?style=flat-square)](https://github.com/mattackard/project-0/releases/latest)
 # GoNotes
 
 GoNotes is a lightweight text editor written in Go. GoNotes was originally written as a CLI application, but has been expanded to include a HTTP client and Go server. The original CLI program is still fully functional and has all the core features of the web client.
@@ -19,7 +18,7 @@ or you can use go get
 go get github.com/mattackard/project-0
 ```
 
-## Porject Dependencies
+## Project Dependencies
 
 You can install all go dependencies using go get in the project directory
 
